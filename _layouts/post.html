@@ -11,6 +11,28 @@ layout: default
     @media screen and (max-width: 1020px){
         body { background:#fff; }
     }
+
+	.fn-clear:after {
+	    clear: both;
+	    content: " ";
+	    display: block;
+	    font-size: 0;
+	    height: 0;
+	    visibility: hidden;
+	}
+
+    .det-image {
+    	float: left;
+    }
+
+    .det-text {
+		padding-left: 10px;
+		float: left;
+	    font-size: 16px;
+	    line-height: 18px;
+	    padding-left: 10px;
+	    width: 150px;
+    }
 </style>
 
 <div id="content">
@@ -21,7 +43,15 @@ layout: default
     </div>
 
     <div class="sidenav">
-        <iframe width="100%" height="75" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=75&fansRow=2&ptype=1&speed=0&skin=5&isTitle=0&noborder=0&isWeibo=0&isFans=0&uid=1855270953&verifier=375b89d6&dpc=1"></iframe>
+    	 <h4 class="title">简介</h4>
+         <div class="det fn-clear">
+             <div class="det-image">
+                 <img src="/images/avatar.jpg" width='80px' />
+             </div>
+             <div class="det-text">
+                 <p>一个 80 后程序员, 比较熟悉 java,JVM 相关的技术, 关注 Liunx.</p>
+             </div>
+         </div>
     </div>
 
     <div class="sidenav">
