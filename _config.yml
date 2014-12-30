@@ -5,10 +5,7 @@ pygments: true
 paginate: 8
 permalink: /:title
 
-title: BeiYuu.com
-url: http://beiyuu.com
+title: -10
+url: http://hushi55.github.io/
 feed: /atom.xml
-author_info: <a href="http://beiyuu.com/">BeiYuu</a>
-
-
-#gems: [jekyll-mentions, jemoji, jekyll-redirect-from, jekyll-sitemap]
+author_info: <a href="http://hushi55.github.io/">-10</a>
