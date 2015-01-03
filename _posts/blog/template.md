@@ -6,7 +6,7 @@ category: blog
 ---
 
 
-
+<pre>代码块</pre>
 
 
 [-10]:    http://hushi55.github.io/  "-10"
