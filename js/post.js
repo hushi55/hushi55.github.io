@@ -202,17 +202,22 @@ $(document).ready(function(){
         $.getScript('/js/css3-ani.js',function(){});
     }
 
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'bloghushi55'; // required: replace example with your forum shortname
+   //<!-- 多说评论框 start -->
+	(function() {
 
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function () {
+		var ds_div = '<div class="ds-thread entry" data-thread-key="' + data_thread_key + '" ' +
+			' data-title="' + data_title + '"' +
+			' data-url="' + data_url +'"></div>';
+		$('#content').append(ds_div);
 
-    	$('#content').append('<div id="disqus_thread" class="entry"></div>');
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	//<!-- 多说评论框 end -->
 
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
+
 });
