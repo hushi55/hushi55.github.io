@@ -205,7 +205,7 @@ $(document).ready(function(){
    //<!-- 多说评论框 start -->
 	(function() {
 
-		var ds_div = '<div class="ds-thread entry" data-thread-key="' + data_thread_key + '" ' +
+		var ds_div = '<div class="ds-thread entry" style="clear:none" data-thread-key="' + data_thread_key + '" ' +
 			' data-title="' + data_title + '"' +
 			' data-url="' + data_url +'"></div>';
 		$('#content').append(ds_div);
