@@ -2,9 +2,13 @@
 /* Original theme - http://noahfrederick.com/vim-color-scheme-hemisu/ */
 .prettyprint {
   background: white;
-  font-family: Menlo, 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Consolas, monospace, Courier;
-  font-size: 16px;
-  line-height: 1.5;
+  font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important;
+  font-size: 1em !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  height: auto !important;
+  left: auto !important;
+  line-height: 1.1em !important;
   border: 1px solid #ccc;
   padding: 10px;
   white-space:pre;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;
@@ -20,7 +24,8 @@
   }
 
   .kwd {
-    color: #739200;
+    color: #006699;
+    font-weight: bold !important;
   }
 
   .com {
@@ -28,7 +33,7 @@
   }
 
   .typ {
-    color: #ff0055;
+    color: #991155;
   }
 
   .lit {
