@@ -33,7 +33,7 @@ Netty4 带来一个与众不同的特点是其 ByteBuf 的实现，相比之下�
 能够在5-10s的时间内进行一次younger GC，每次GC的时间可以控制在10ms水平上，
 这类的应用，实在是太适合GC行的模式了，而且结合Java高效的分代GC，简直就是一个理想搭配。
 
-### 对 JVM 生态的影响
+### 影响
 Netty 4 引入了手工内存的模式，我觉得这是一大创新，这种模式甚至于会延展，
 应用到Cache应用中。实际上，结合JVM的诸多优秀特性，如果用Java来实现一个Redis型Cache、
 或者 In-memory SQL Engine，或者是一个Mongo DB，我觉得相比C/C++而言，都要更简单很多。
@@ -64,6 +64,8 @@ chunk 将是用一个
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/netty_view.png)
 从中可以看出 netty 是将内存分为 arena， chunklist， chunk， subpage， 其中 subpage 又分为 tiny subpage pools 和 small subpage pools， 这些逻辑分类中以 chunk 为中心每个chunk 的默认大小是 16M， chunk 的管理如下图
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/chunk_mangar.png)
+
+### chunk 管理
 chunk 使用一个完全二叉树来管理，数组的 0 index 没有使用，depth 代表树的深度
 
  * depth=0        1 node (chunkSize)
@@ -77,32 +79,49 @@ chunk 使用一个完全二叉树来管理，数组的 0 index 没有使用，de
 树的搜索算法，当申请内存是从树的根节点开始，
 
 <pre>
-	public static void main(String[] args) throws Exception {
-        // Configure SSL.
-        final SslContext sslCtx;
-        if (SSL) {
-            SelfSignedCertificate ssc = new SelfSignedCertificate();
-            sslCtx = SslContext.newServerContext(ssc.certificate(), ssc.privateKey());
-        } else {
-            sslCtx = null;
+	/**
+     * Algorithm to allocate an index in memoryMap when we query for a free node
+     * at depth d
+     *
+     * @param d depth
+     * @return index in memoryMap
+     */
+    private int allocateNode(int d) {
+        int id = 1;
+        int initial = - (1 << d); // has last d bits = 0 and rest all = 1
+        byte val = value(id);
+        if (val > d) { // unusable
+            return -1;
         }
-
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new FactorialServerInitializer(sslCtx));
-
-            b.bind(PORT).sync().channel().closeFuture().sync();
-        } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
+        while (val < d || (id & initial) == 0) { // id & initial == 1 << d for all ids at depth d, for < d it is 0
+            id <<= 1;
+            val = value(id);
+            if (val > d) {
+                id ^= 1;
+                val = value(id);
+            }
         }
+        byte value = value(id);
+        assert value == d && (id & initial) == 1 << d : String.format("val = %d, id & initial = %d, d = %d",
+                value, id & initial, d);
+        setValue(id, unusable); // mark as unusable
+        updateParentsAlloc(id);
+        return id;
     }
 </pre>
+
+### subpage 的管理
+若是申请的内存小于 pageSize，netty 将一个 page 分割为多个 subpage 来管理，每个 subpage 的大小是一样的。
+
+## reference counter
+我们知道 JVM 的是基于垃圾回收机制的，并且垃圾回收是基于图的搜索算法。但是 Netty 没有依拉 JVM 的垃圾回收机制，对内存的管理使用的 **引用计数** 的方法。
+
+
+## 参考
+
+- [http://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf](http://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf)
+- [https://www.facebook.com/notes/facebook-engineering/scalable-memory-allocation-using-jemalloc/480222803919](https://www.facebook.com/notes/facebook-engineering/scalable-memory-allocation-using-jemalloc/480222803919)
+- [http://wangzaixiang.blogspot.com/2014/01/netty4bytebuf.html](http://wangzaixiang.blogspot.com/2014/01/netty4bytebuf.html)
 
 
 [-10]:    http://hushi55.github.io/  "-10"
