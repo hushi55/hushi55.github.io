@@ -80,7 +80,7 @@ private volatile boolean stop;
 ## assembly
 以下是 **没有** volatile 修饰的 assembly 代码
 
-<pre>
+<pre class="nowordwrap">
 Java HotSpot(TM) Server VM warning: PrintAssembly is enabled; turning on DebugNonSafepoints to gain additional output
 CompilerOracle: dontinline *VisibilityTest.run
 CompilerOracle: compileonly *VisibilityTest.run
@@ -140,7 +140,7 @@ true
 
 以下是 **有** volatile 修饰的 assembly 代码
 
-<pre>
+<pre class="nowordwrap">
 Java HotSpot(TM) Server VM warning: PrintAssembly is enabled; turning on DebugNonSafepoints to gain additional output
 CompilerOracle: dontinline *VisibilityTest.run
 CompilerOracle: compileonly *VisibilityTest.run
