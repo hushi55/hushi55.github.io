@@ -134,15 +134,15 @@ duration = 3003702192
 从上图可以看出一个 CPU 核心是分别有自己的 L1，L2 级 cache，但是所有的 CPU 核心总用一个 L3 级 cache。那 L1，L2 级 cache 有啥区别呢，请看下图
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_l1_l2.png)
 
-L1 级 cache 是用来缓存指令的，二 L2 级 cache 是用来缓存数据的。
+L1 级 cache 是分开的，dcache 数据缓存，icache 指令缓存。
 
-从上面我们知道了现代的 CPU 一般都会有一级，二级，三级 cache，那为什么要有这些个 cache，我们知道 cache 其实是为了平衡 read 速度的一个装置，二 buffer 一般是为了平衡 write 的装置。cpu 这些个 cache 正是填补内存和 cpu 之间读取速度而设计。那我们可以看看到底 CPU 访问各级硬件的时间有多大的差别。
+从上面我们知道了现代的 CPU 一般都会有一级，二级，三级 cache，那为什么要有这些个 cache，我们知道一般说 cache 其实是为了平衡 read 速度的一个装置，而说 buffer 一般是为了平衡 write 的装置。cpu 这些个 cache 正是填补内存和 cpu 之间读取速度而设计。那我们可以看看到底 CPU 访问各级硬件的时间有多大的差别：
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_load_time.png)
 
 ## 验证
 
 ### perf 介绍
-下面我们来验证我们的上面程序为什么会出现运行时间相处一个数量级。
+下面我们来验证我们的上面程序为什么会出现运行时间相差一个数量级。
 首先我们介绍一个 Linux 下军工级别的监控工具 **perf**。
 
 Perf 是用来进行软件性能分析的工具。通过它，应用程序可以利用 PMU，tracepoint 和内核中的特殊计数器来进行性能统计。它不但可以分析指定应用程序的性能问题 (per thread)，也可以用来分析内核的性能问题，当然也可以同时分析应用代码和内核，从而全面理解应用程序中的性能瓶颈。
