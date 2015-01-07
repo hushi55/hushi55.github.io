@@ -2,8 +2,9 @@ auto: true
 
 markdown: rdiscount
 pygments: true
-paginate: 8
-permalink: /:title
+paginate: 2
+permalink: /:year/:month/:day/:title
+blognewlist: 5
 
 title: -10
 production_url: http://hushi55.github.io
