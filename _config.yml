@@ -6,6 +6,7 @@ paginate: 8
 permalink: /:title
 
 title: -10
+production_url: http://hushi55.github.io
 url: http://hushi55.github.io
 feed: /atom.xml
 author_info: <a href="http://hushi55.github.io/">-10</a>
