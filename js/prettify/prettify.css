@@ -11,10 +11,11 @@
   line-height: 1.1em !important;
   border: 1px solid #ccc;
   padding: 10px;
+  padding-left: 25px;
   white-space:pre;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;
 }
 
-.nowordwrap { white-space:pre; }
+.nowordwrap { white-space:pre; word-wrap:normal;}
 
 .pln {
   color: #111111;
