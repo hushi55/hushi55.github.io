@@ -98,7 +98,7 @@ duration = 28704662032
 
 real	0m44.603s
 user	0m54.004s
-sys	1m28.199s
+sys		1m28.199s
 [root@centos101 hushi]#
 </pre>
 
@@ -112,7 +112,7 @@ duration = 3003702192
 
 real	0m18.819s
 user	0m23.566s
-sys	1m26.321s
+sys		1m26.321s
 [root@centos101 hushi]#
 </pre>
 
@@ -129,7 +129,7 @@ duration = 3003702192
 
 ### CPU 的结构
 我们先来看看现代 CPU 的一般结构：
-![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_cache.jpg?watermark/2/text/cG93ZXIgYnkgLTEw/fontsize/500/font/Y291cmllciBuZXc=/fill/I2ZmMDAwMA==)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_cache.jpg)
 
 从上图可以看出一个 CPU 核心是分别有自己的 L1，L2 级 cache，但是所有的 CPU 核心总用一个 L3 级 cache。那 L1，L2 级 cache 有啥区别呢，请看下图
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_l1_l2.png)
