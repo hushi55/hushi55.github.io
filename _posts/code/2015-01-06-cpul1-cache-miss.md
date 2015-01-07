@@ -129,15 +129,15 @@ duration = 3003702192
 
 ### CPU 的结构
 我们先来看看现代 CPU 的一般结构：
-![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_cache.jpg)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_cache.jpg{{ site.watermark }})
 
 从上图可以看出一个 CPU 核心是分别有自己的 L1，L2 级 cache，但是所有的 CPU 核心总用一个 L3 级 cache。那 L1，L2 级 cache 有啥区别呢，请看下图
-![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_l1_l2.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_l1_l2.png{{ site.watermark }})
 
 L1 级 cache 是分开的，dcache 数据缓存，icache 指令缓存。
 
 从上面我们知道了现代的 CPU 一般都会有一级，二级，三级 cache，那为什么要有这些个 cache，我们知道一般说 cache 其实是为了平衡 read 速度的一个装置，而说 buffer 一般是为了平衡 write 的装置。cpu 这些个 cache 正是填补内存和 cpu 之间读取速度而设计。那我们可以看看到底 CPU 访问各级硬件的时间有多大的差别：
-![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_load_time.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/cpu_load_time.png{{ site.watermark }})
 
 ## 验证
 

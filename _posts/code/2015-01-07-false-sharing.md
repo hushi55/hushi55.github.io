@@ -162,7 +162,7 @@ sys		0m0.039s
 
 对于第二个问题，CPU 各个核之间的通过一致性协议来访问 cache 中的数据，其中 MESI 协议是使用的最多的一种，如图：
 
-![](http://7tsy8h.com1.z0.glb.clouddn.com/@/cpu/cpu_mesi.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/@/cpu/cpu_mesi.png{{ site.watermark }})
 
 M,E,S和I代表使用MESI协议时缓存行所处的四个状态：
 
@@ -173,14 +173,14 @@ M,E,S和I代表使用MESI协议时缓存行所处的四个状态：
 
 通过上面的介绍我们知道了 CPU 内部是如何组织和管理 cache 的，一个 cacheline 有 64 字节之多，那么当有两个线程都修改了一个 cacheline 中的两个不同的数据，根据 MESI 一致性协议，这个 cacheline 应该是失效的，应该和主存同步数据，这个如图所示：
 
-![](http://7tsy8h.com1.z0.glb.clouddn.com/@/cpu/false_sharing1.jpg)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/@/cpu/false_sharing1.jpg{{ site.watermark }})
 
 那么这造成 L1 级 cache 不断的失效。
 
 ## 验证问题
 由于 NoFalseSharing 填充了 7 个 long 型数据，正好能保证 value 属性在一个 cacheline中，效果如图所示
 
-![](http://7tsy8h.com1.z0.glb.clouddn.com/@/cpu/false_sharing2.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/@/cpu/false_sharing2.png{{ site.watermark }})
 
 所以猜测应该是 NoFalseSharing L1 级 cache 的  miss 事件应该更少。既然是 L1 级 cache 会失效，那么我们来看看实验的结果：
 

@@ -52,18 +52,18 @@ malloc而写的 [jemalloc][]。 [jemalloc][]是从2007年开始以FreeBSD标准�
 - **Thread cache：**如果是开辟小块内存，为使不参照arena而直接malloc，给各自的线程 thread cache领域。此idea是google的tcmalloc的核心部分，亦在jemalloc中体现。再拿上面的例子，这次给小朋友们除了一张大图纸外，再各自给A4纸一张。这样，小朋友们在不画大面积的点时，只在自己的A4纸上心情地画即可(no arena seeking)。可以在自己手上的纸上画或涂(using thread cache)，完全不用顾忌别人(no synchronization, no locking)，迅速有效地画。
 
 [jemalloc][]的整体结构
-![](http://7tsy8h.com1.z0.glb.clouddn.com/jmalloc_1.png)
-![](http://7tsy8h.com1.z0.glb.clouddn.com/jmalloc_2.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/jmalloc_1.png{{ site.watermark }})
+![](http://7tsy8h.com1.z0.glb.clouddn.com/jmalloc_2.png{{ site.watermark }})
 
 [jemalloc][] 中的分块管理
-![](http://7tsy8h.com1.z0.glb.clouddn.com/jmollac_chunk.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/jmollac_chunk.png{{ site.watermark }})
 chunk 将是用一个
 
 ## Netty 的实现，源码分析
 以下源码分析是基于 netty 4.0.24.Final， 首先来看张 netty 内存的整体图
-![](http://7tsy8h.com1.z0.glb.clouddn.com/netty_view.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/netty_view.png{{ site.watermark }})
 从中可以看出 netty 是将内存分为 arena， chunklist， chunk， subpage， 其中 subpage 又分为 tiny subpage pools 和 small subpage pools， 这些逻辑分类中以 chunk 为中心每个chunk 的默认大小是 16M， chunk 的管理如下图
-![](http://7tsy8h.com1.z0.glb.clouddn.com/chunk_mangar.png)
+![](http://7tsy8h.com1.z0.glb.clouddn.com/chunk_mangar.png{{ site.watermark }})
 
 ### chunk 管理
 chunk 使用一个完全二叉树来管理，数组的 0 index 没有使用，depth 代表树的深度
