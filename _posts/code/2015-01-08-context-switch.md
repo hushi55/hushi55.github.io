@@ -155,6 +155,41 @@ procs -------------------memory------------------ ---swap-- -----io---- --system
  2  0     646408    1337384    2663304   44347108    0    0     0     4 2963 396925   1  3  97  0  0
 </pre>
 
+## 什么是 context switch
+context 就是我们常说的上线文，switch 必然设计到 2 个 context。过程如下图：
+![](http://7tsy8h.com1.z0.glb.clouddn.com/context_switch.png{{ site.watermark }})
+
+那 context 具体是什么什么，其实就是 process control block，如下图：
+![](http://7tsy8h.com1.z0.glb.clouddn.com/pcb.png{{ site.watermark }})
+
+具体包括：
+
+- **进程号**
+- **进程状态**：new, ready, running, waiting, halted...
+- **程序计数器**
+- **寄存器**：通用register, stack pointer, PSW等
+- **CPU 调度信息**：进程优先级, 在ready queue中的PCB指针，调度参数。
+- **内存管理信息**：用了多少CPU time, 使用CPU的Max time, Quantumpage tables, segment tables. Base/limit register, page table(if paging 内存管理)
+- **I/O 状态信息**：分配给进程的驱动，打开的文件列表，未完成的I/O request，在I/O queue中的等待编号
+
+
+
+## 引起 context switch 的原因
+
+- 当前执行任务的时间片用完之后, 系统CPU正常调度下一个任务
+- 当前执行任务碰到IO阻塞, 调度器将挂起此任务, 继续下一任务
+- 多个任务抢占锁资源, 当前任务没有抢到,被调度器挂起, 继续下一任务
+- 用户代码挂起当前任务, 让出CPU时间
+- 硬件中断
+
+## context switch 的影响
+上下文切换会带来直接和间接两种因素影响程序性能的消耗
+
+- 直接消耗包括: CPU寄存器需要保存和加载, 系统调度器的代码需要执行, TLB实例需要重新加载, CPU 的pipeline需要刷掉
+- 间接消耗指的是多核的cache之间得共享数据, 间接消耗对于程序的影响要看线程工作区操作数据的大小
+
+
+
 
 
 [-10]:    http://hushi55.github.io/  "-10"
