@@ -6,7 +6,7 @@ category: code
 tags: [linux, vmstat, context switch]
 ---
 ## 问题
-不知道是不是大家都有用过 ajax 来过去数据的经验，一般的使用场景就是比如定时刷新看是否有新的数据。那不知道大家是否有运维过这样的应用。我的经验的是当用户量上去以后，系统的 cpu load 会居高不下。我有一次这样的排查经验，系统的 cpu load 非常高，达到 3000%，一直找不到问题所在，经过排查，找出来问题所在是前端 ajax 请求太频繁，设置了 5 秒轮训，导致 linux 服务器大量的 context switch。
+不知道是不是大家都有用过 ajax 来获取数据的经验，一般的使用场景就是比如定时刷新看是否有新的数据。那不知道大家是否有运维过这样的应用。我的经验是当用户量上去以后，系统的 cpu load 会居高不下。我有一次这样的排查经验，系统的 cpu load 非常高，达到 3000%，一直找不到问题所在，经过排查，找出来问题所在是前端 ajax 请求太频繁，设置了 5 秒轮训，导致 linux 服务器大量的 context switch，消耗了大量的 cpu。
 
 ## 实验
 我们来看下面这段代码：
@@ -157,9 +157,11 @@ procs -------------------memory------------------ ---swap-- -----io---- --system
 
 ## 什么是 context switch
 context 就是我们常说的上线文，switch 必然设计到 2 个 context。过程如下图：
+
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/context_switch.png{{ site.watermark }})
 
 那 context 具体是什么什么，其实就是 process control block，如下图：
+
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/pcb.png{{ site.watermark }})
 
 具体包括：
@@ -185,8 +187,8 @@ context 就是我们常说的上线文，switch 必然设计到 2 个 context。
 ## context switch 的影响
 上下文切换会带来直接和间接两种因素影响程序性能的消耗
 
-- 直接消耗包括: CPU寄存器需要保存和加载, 系统调度器的代码需要执行, TLB实例需要重新加载, CPU 的pipeline需要刷掉
-- 间接消耗指的是多核的cache之间得共享数据, 间接消耗对于程序的影响要看线程工作区操作数据的大小
+- 直接消耗包括: CPU寄存器需要保存和加载，系统调度器的代码需要执行，TLB实例需要重新加载，CPU 的pipeline需要刷掉
+- 间接消耗指的是多核的cache之间得共享数据，间接消耗对于程序的影响要看线程工作区操作数据的大小
 
 
 
