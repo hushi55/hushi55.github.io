@@ -3,6 +3,7 @@ layout: post
 title: Java volatile 汇编代码研究
 description: 通过 volatile 的汇编代码研究 JVM 内存模型
 category: code
+tags: [java, jvm, assmebly]
 ---
 ## 一个程序
 我们有下面这段程序代码：

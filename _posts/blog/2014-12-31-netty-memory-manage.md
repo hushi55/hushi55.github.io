@@ -3,6 +3,7 @@ layout: post
 title:  netty 内存管理
 description: netty 内存管理-手动内存管理
 category: blog
+tags: [java, netty, jmalloc]
 ---
 >**C/C++ 和 java 中有个围城，城里的想出来，城外的想进去！**
 

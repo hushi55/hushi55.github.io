@@ -3,6 +3,7 @@ layout: post
 title: false sharing 研究
 description: cpu cacheline 研究
 category: code
+tags: [java, linux, perf, falsesharing, cpu]
 ---
 ## 引子
 我们还是从实验开始，看下面这两端段程序：

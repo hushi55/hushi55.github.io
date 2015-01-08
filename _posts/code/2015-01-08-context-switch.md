@@ -3,6 +3,7 @@ layout: post
 title: context switch 研究
 description: context switch 和 cpu affinity
 category: code
+tags: [linux, vmstat, context switch]
 ---
 ## 问题
 不知道是不是大家都有用过 ajax 来过去数据的经验，一般的使用场景就是比如定时刷新看是否有新的数据。那不知道大家是否有运维过这样的应用。我的经验的是当用户量上去以后，系统的 cpu load 会居高不下。我有一次这样的排查经验，系统的 cpu load 非常高，达到 3000%，一致到不到问题所在，经过排查，找出来问题所在是前端 ajax 请求太频繁，设置了 5 秒轮训，导致 linux 服务器大量的 context switch。

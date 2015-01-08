@@ -3,6 +3,7 @@ layout: post
 title: cpu L1 级 cache miss 研究
 description: cpu 内部结构研究
 category: code
+tags: [linux, java, cacheline, cpu, pref]
 ---
 ## 引子
 <pre>
