@@ -12,3 +12,6 @@
 * netty 线程模型文章
 * Java 锁的实现
 * disruptor 源码分析
+
+* memcache 总结
+* jni 的使用
