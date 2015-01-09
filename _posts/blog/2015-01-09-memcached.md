@@ -127,6 +127,11 @@ or at least speed it up.
 - Evict_Time: The time (in seconds) since the last eviction
 - OOM: The number of items that have triggered an out of memory error
 
+### memcached 清空缓存
+我们要清空 memcached 的缓存时，不用重启服务，可以使用下面的命令：
 
+<pre>
+flush_all
+</pre>
 
 [-10]:    http://hushi55.github.io/  "-10"
