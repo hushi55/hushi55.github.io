@@ -16,3 +16,12 @@
 * memcache 总结
 * jni 的使用
 * Systemtap 研究
+
+linux
+* epoll 的使用
+* vim 打造成顺手的 IDE
+
+
+http://www.searchtb.com/2013/03/x86-64_register_and_function_frame.html
+
+http://blog.csdn.net/klarclm/article/details/8624214
