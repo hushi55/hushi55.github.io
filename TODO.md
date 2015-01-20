@@ -21,6 +21,9 @@ linux
 * epoll 的使用
 * vim 打造成顺手的 IDE
 
+数据结构
+* 红黑树
+
 
 http://www.searchtb.com/2013/03/x86-64_register_and_function_frame.html
 
