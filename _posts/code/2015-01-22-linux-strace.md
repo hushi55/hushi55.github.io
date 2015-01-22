@@ -44,7 +44,10 @@ user    0m0.761s
 sys     0m0.318s
 </pre>
 
-相差太大了，不能接受，需要找出原因。遇到这种疑难问题，strace 就派上用场了，首先我们看看 strace 的用法
+相差太大了，不能接受，需要找出原因。遇到这种疑难问题，strace 就派上用场了。
+
+## strace 的使用说明
+首先我们看看 strace 的用法
 
 <pre class="nowordwrap">
 [root@perf01 ~]# strace --help
@@ -84,6 +87,7 @@ usage: strace [-dDffhiqrtttTvVxx] [-a column] [-e expr] ... [-o file]
 - -o file：输出跟踪的日志到一个文件中，而不是标准输出流中。
 - -T：打印系统调用的时间。
 
+## strace 的使用
 我们使用下面的命令：
 
 <pre>
@@ -142,5 +146,9 @@ strace -f -T -o aa.txt salt '*' test.ping
 </pre>
 
 这两个 ip 地址是这台 linux 上配置的 DNS，在主机上 ping 这俩个地址确实是 ping 不通，对比正常那台 linux 的 DNS 配置时，配置确实是不同的。修改到一致后，问题消失。至此使用 strace 调试问题也就完美结束了。
+
+## 参考
+
+- [http://www.ibm.com/developerworks/cn/linux/l-tsl/](http://www.ibm.com/developerworks/cn/linux/l-tsl/)
 
 [-10]:    http://hushi55.github.io/  "-10"
