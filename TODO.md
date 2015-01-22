@@ -21,6 +21,9 @@ linux
 * epoll 的使用
 * vim 打造成顺手的 IDE
 
+OAuth app_key Frequency limit
+* nginx module 支持 OAuth1,2 的 API 调用限制
+
 数据结构
 * 红黑树
 
