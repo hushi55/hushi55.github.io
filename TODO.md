@@ -23,6 +23,7 @@ linux
 
 OAuth app_key Frequency limit
 * nginx module 支持 OAuth1,2 的 API 调用限制
+(可以参考 src/http/modules/ngx_http_limit_req_module.c)
 
 数据结构
 * 红黑树
@@ -31,3 +32,9 @@ OAuth app_key Frequency limit
 http://www.searchtb.com/2013/03/x86-64_register_and_function_frame.html
 
 http://blog.csdn.net/klarclm/article/details/8624214
+
+
+
+Nginx slab share memory
+http://www.pagefault.info/?p=177
+http://www.cnblogs.com/fll369/archive/2012/11/26/2789572.html
