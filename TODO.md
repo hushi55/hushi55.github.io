@@ -38,3 +38,13 @@ http://blog.csdn.net/klarclm/article/details/8624214
 Nginx slab share memory
 http://www.pagefault.info/?p=177
 http://www.cnblogs.com/fll369/archive/2012/11/26/2789572.html
+http://blog.csdn.net/qifengzou/article/details/11678115
+
+nginx slab内存管理
+http://www.cnblogs.com/doop-ymc/p/3412572.html
+
+http://cjhust.blog.163.com/blog/static/17582715720111017114121678/
+
+
+漏桶算法描述
+http://www.hemono.com/?p=673
