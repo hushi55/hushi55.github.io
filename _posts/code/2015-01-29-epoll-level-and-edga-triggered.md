@@ -1,7 +1,7 @@
 ---
 layout: post
 title: epoll level and edga trigggered 
-description: epoll level and edga trigggered 解释
+description: epoll 水平和边缘触发模式解释
 category: code
 tags: [c, epoll, linux]
 ---
