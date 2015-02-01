@@ -2,7 +2,7 @@
 layout: post
 title: linux kernel 系列 - ctl_table
 description: linux kernel ctl_table 解释
-category: blog
+category: code
 tags: [c, linux, kernel]
 ---
 在看 epoll 的 linux 源码时，对于 ctl_table 不是很清楚，就查了一下关于这个的解释。这个主要是用于 linux /proc 和用户空间通信的一种虚拟文件系统中。
