@@ -11,4 +11,8 @@ tags: [linux]
 
 原图出处为[这里](http://www.cnblogs.com/clover-toeic/p/3754433.html)。
 
+![](http://7tsy8h.com1.z0.glb.clouddn.com/linux-memory-manage.gif)
+
+原图出处为[这里](http://bbs.chinaunix.net/thread-2018659-2-1.html)。
+
 [-10]:    http://hushi55.github.io/  "-10"
