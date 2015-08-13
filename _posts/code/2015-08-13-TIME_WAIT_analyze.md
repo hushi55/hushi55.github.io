@@ -36,7 +36,7 @@ FRAG	  0         0         0
 ## 问题分析
 对于 TIME_WAIT 状态太多的情况，我们来分析下问题。首先我们来看看 tcp 的状态迁移图：
 
-![](http://www.tcpipguide.com/free/diagrams/tcpclosesimul.png)
+![](http://coolshell.cn//wp-content/uploads/2014/05/tcp_open_close.jpg)
 
 可以看到 TIME_WAIT 状态的产生是tcp 链接的一段主动关闭了链接，才会有 TIME_WAIT。那么解决这个问题的方法就是不主动关闭 tcp 链接。
 
