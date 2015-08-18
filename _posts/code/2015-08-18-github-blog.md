@@ -8,8 +8,8 @@ tags: [github]
 我的这个 blogs 站点使用也有一段时间，这个站点是基于 github 搭建的，使用的 jekyll 解析的 markdown 文档。今天刚好换电脑，在新电脑上重新
 搭建一遍本地环境，现在记录下来用于以后的查找。这里主要是说明 jekyll 在 windows 上的本地环境搭建，其他的关于 github 的设置等，以后再补。
 
-首先到 [jekyll for windows](http://jekyll-windows.juthilo.com/1-ruby-and-devkit/) 的站点下载好 Ruby 和 Ruby DevKit，这
-安装时要注意勾选  "Add Ruby executables to your PATH"，这个选项。是将 Ruby 在 PATH 路径中，方便命令的执行。当安装完成后执行如下命令
+首先到 [jekyll for windows](http://jekyll-windows.juthilo.com/1-ruby-and-devkit/) 的站点下载好 Ruby 和 Ruby DevKit，在
+安装时要注意勾选  "Add Ruby executables to your PATH"，这个选项是将 Ruby 加入 PATH 路径中，方便命令的执行。当安装完成后执行如下命令
 
 <pre>
 cd C:\RubyDevKit
@@ -38,7 +38,7 @@ ruby dk.rb install
 ---
 </pre>
 
-意思是说这个文件会将 Ruby 的安装目录添加到这个文件中，格式就是注释知名的，我们可以根据我们自己的安装目录添加一行后如下：
+意思是说这个文件会将 Ruby 的安装目录添加到这个文件中，格式就是注释中指明的，我们可以根据我们自己的安装目录添加一行后如下：
 
 <pre class="nowordwrap">
 ...
@@ -60,7 +60,7 @@ ruby dk.rb install
 gem sources
 </pre>
 
-查看使用的是哪个源，在使用如下命令，删除后再添加 taobao 的源
+查看使用的是哪个源，再使用如下命令，删除后再添加 taobao 的源
 
 <pre>
 gem sources --remove https://rubygems.org/
@@ -76,7 +76,7 @@ gem install jekyll
 gem install jekyll rdiscount
 </pre>
 
-若是没有出错，那么在 windows 下的 jekyll 本地环境就搭建好了，为了方便每次在本地调试，我们可以写一个 bat 文件，方便启动 jekyll，这是我的 bat 文件，
+若是没有出错，那么在 windows 下的 jekyll 本地环境就搭建好了，为了方便每次在本地调试，我们可以写一个 bat 文件，方便启动 jekyll blog，这是我的 bat 文件，
 很简单：
 
 <pre>
