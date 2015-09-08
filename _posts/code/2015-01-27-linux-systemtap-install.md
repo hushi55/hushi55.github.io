@@ -16,7 +16,12 @@ yum install systemtap systemtap-runtime
 安装完后我们可以是会用下面的命令来验证是否安装成功：
 
 <pre>
+## test kernel debug symbol info
 stap -v -e 'probe vfs.read {printf("read performed\n"); exit()}'
+
+## test user space debug 
+stap -e  'probe process("ls").function("*").call { log (probefunc()." ".$$parms) }' -c 'ls -l'
+
 </pre>
 
 若是一切顺利，我们看到下面的输出，这表明成功安装了：
