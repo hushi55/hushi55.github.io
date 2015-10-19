@@ -1,7 +1,7 @@
 ---
 layout: post
 title: block input output
-description: linux kernel block IO
+description: linux kernel 系列之  block IO
 category: code
 tags: [linux, kernel]
 ---
