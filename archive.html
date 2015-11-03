@@ -12,21 +12,21 @@ h2 {margin-top: 25px;}
         <h2>Blog</h2>
 		  <ul>
 		  {% for post in site.categories.blog %}
-		    <li><span>{{ post.date | date: "%B %e, %Y" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}" title="{{ post.description }}">{{ post.title }}</a></li>
+		    <li><span>{{ post.date | date: "%Y-%m-%d" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}" title="{{ post.description }}">{{ post.description }}</a></li>
 		  {% endfor %}
 		  </ul>
 
 		  <h2>Code</h2>
 		  <ul>
 		  {% for post in site.categories.code %}
-		    <li><span>{{ post.date | date: "%B %e, %Y" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}" title="{{ post.description }}">{{ post.title }}</a></li>
+		    <li><span>{{ post.date | date: "%Y-%m-%d" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}" title="{{ post.description }}">{{ post.description }}</a></li>
 		  {% endfor %}
 		  </ul>
 
 		  <h2>Life</h2>
 		  <ul>
 		  {% for post in site.categories.life %}
-		    <li><span>{{ post.date | date: "%B %e, %Y" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}" title="{{ post.description }}">{{ post.title }}</a></li>
+		    <li><span>{{ post.date | date: "%Y-%m-%d" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}" title="{{ post.description }}">{{ post.description }}</a></li>
 		  {% endfor %}
 		  </ul>
 
