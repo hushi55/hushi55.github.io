@@ -12,7 +12,7 @@ epoll 的工作原理是 kernel 帮忙管理着大量的链接，并且通过驱
 ### epoll_create
 
 <pre class="nowordwrap">
-#include <sys/epoll.h>
+#include &lt;sys/epoll.h&gt;
 
 int epoll_create(int size);
 </pre>
@@ -25,7 +25,7 @@ epoll_create 创建 epoll 对象。
 ### epoll_ctl
 
 <pre class="nowordwrap">
-#include <sys/epoll.h>
+#include &lt;sys/epoll.h&gt;
 
 int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
 </pre>
@@ -52,7 +52,7 @@ epoll_ctl 向 epoll 对象中添加敢兴趣的事件，epoll_wait 方法返回�
 ### epoll_wait
 
 <pre class="nowordwrap">
-#include <sys/epoll.h>
+#include &lt;sys/epoll.h&gt;
 
 int epoll_wait(int epfd, struct epoll_event *events,
                       int maxevents, int timeout);
