@@ -173,6 +173,15 @@ request 包的 seq 号是接上这个包的 ACK 号，如图：
 > 
 > 其实，TIME_WAIT表示的是你主动断连接，所以，这就是所谓的“不作死不会死”。试想，如果让对端断连接，那么这个破问题就是对方的了，呵呵。另外，如果你的服务器是于HTTP服务器，那么设置一个HTTP的KeepAlive有多重要（浏览器会重用一个TCP连接来处理多个HTTP请求），然后让客户端去断链接（你要小心，浏览器可能会非常贪婪，他们不到万不得已不会主动断连接）。
 
+### TIME_WAIT 状态存在的理由
+
+- 可靠的实现 TCP 全双工连接的终止
+- 允许老的重复的分节在网络中消息
+
+	第一个理由是假设最终的 ACK 包丢失，服务端将超市重传最终的 FIN 包，但是 client 端没有维护 TCP 状态，将导致相应一个 RST，server 端将解释为一个错误。
+	
+	第二个理由是假设我们的 client 网络处于 NAT 的环境中，client 新的链接使用以前的端口。但是以前的重复 ACK 包又重新到达了 server 端，将可能导致新的链接终止。
+
 
 ## 参考
 
@@ -181,5 +190,6 @@ request 包的 seq 号是接上这个包的 ACK 号，如图：
 - [nginx tuning](https://www.nginx.com/blog/tuning-nginx/)
 - [nginx keepalives](https://www.nginx.com/blog/http-keepalives-and-web-performance/)
 - [TCP 的那些事儿（上）](http://coolshell.cn/articles/11564.html)
+- [tcp_tw_recycle和tcp_timestamp的问题](http://hustcat.github.io/tcp_tw_recycle-and-tcp_timestamp/)
 
 [-10]:    http://hushi55.github.io/  "-10"
