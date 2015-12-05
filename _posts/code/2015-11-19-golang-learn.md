@@ -13,6 +13,8 @@ tags: [linux, kernel, net]
 - [A Tour for Go](http://tour.golang.org)
 - [深入解析 Go](https://tiancaiamao.gitbooks.io/go-internals/content/zh/index.html)
 - [Golang sweep free alloc](https://github.com/golang/proposal/blob/master/design/12800-sweep-free-alloc.md)
+- [Golang Escape Analysis](http://blog.rocana.com/golang-escape-analysis)
+- [Five things that make Go fast](http://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
 
 ### 学习路径
 
