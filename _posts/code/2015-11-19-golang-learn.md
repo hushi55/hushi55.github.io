@@ -12,6 +12,7 @@ tags: [linux, kernel, net]
 - [Go Web 编程](https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/01.0.md)
 - [A Tour for Go](http://tour.golang.org)
 - [深入解析 Go](https://tiancaiamao.gitbooks.io/go-internals/content/zh/index.html)
+- [Golang sweep free alloc](https://github.com/golang/proposal/blob/master/design/12800-sweep-free-alloc.md)
 
 ### 学习路径
 
