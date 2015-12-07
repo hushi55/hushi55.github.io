@@ -16,6 +16,7 @@ tags: [linux, kernel, net]
 - [Golang Escape Analysis](http://blog.rocana.com/golang-escape-analysis)
 - [Five things that make Go fast](http://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
 - [Go中的连续栈](http://air.googol.im/2014/03/28/contiguous-stacks-in-go.html)
+- [A Manual for the Plan 9 assembler](http://plan9.bell-labs.com/sys/doc/asm.html)
 
 ### 学习路径
 
