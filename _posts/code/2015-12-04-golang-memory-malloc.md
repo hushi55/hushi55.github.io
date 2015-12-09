@@ -23,7 +23,7 @@ Golang 的内存分配的设计起点很高，是基于 Google 自家的 [tcmall
 
 说明了 Golang 的两个作用后，我们来看看联系这两功能的纽带： span。
 
-![](/images/blog/go_mspan.png)
+![](/images/blog/golang/go_mspan.png)
 
 - next, pre 主要是自身构成双向的列表
 - start 保存这个 page 的位置
@@ -31,7 +31,7 @@ Golang 的内存分配的设计起点很高，是基于 Google 自家的 [tcmall
 
 说完了纽带，我们来看看 Golang 在内存中的整体布局，也就是 Golang 是怎么来组织整个内存的：
 
-![](/images/blog/go_malloc_init.png)
+![](/images/blog/golang/go_malloc_init.png)
 
 - arena 部分是我们应用程序能够分配的所有内存
 - bitmap 部分主要是以 8 byte 为单位来标记 arena 部分的内存状态，主要是用于 GC 部分
@@ -40,7 +40,7 @@ Golang 的内存分配的设计起点很高，是基于 Google 自家的 [tcmall
 ## 内存分配的重要组件
 先来看看组件的整体视图：
 
-![](/images/blog/go-mem-system-design.png)
+![](/images/blog/golang/go-mem-system-design.png)
 
 - cache: 每个运行期作线程都会绑定一个 cache，用于无锁 object 分配。  
 - central: 为所有 cache 提供切分好的后备 span 资源。  
@@ -80,7 +80,7 @@ heap 的作用是为了平衡各种 object size 的需求。考虑下面的情�
 
 `cache 组件 --> central 组件 --> heap 组件 --> 操作系统` 
 
-![](/images/blog/go_malloc_algorithm.png)
+![](/images/blog/golang/go_malloc_algorithm.png)
 
 注意上图中的红色部分，object size 为 8 字节的都是指针对象，所以可以作为图遍历算法的 root 对象。关于 GC 部分，
 会在下一篇 blog 中来说明。 
