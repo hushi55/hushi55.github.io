@@ -17,6 +17,7 @@ tags: [linux, kernel, net]
 - [Five things that make Go fast](http://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
 - [Go中的连续栈](http://air.googol.im/2014/03/28/contiguous-stacks-in-go.html)
 - [A Manual for the Plan 9 assembler](http://plan9.bell-labs.com/sys/doc/asm.html)
+- [vim Golang IDE](http://tonybai.com/2014/11/07/golang-development-environment-for-vim/)
 
 ### 学习路径
 
