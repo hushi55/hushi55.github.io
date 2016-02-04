@@ -1,6 +1,6 @@
 auto: true
 
-markdown: kramdown
+markdown: rdiscount
 pygments: true
 paginate: 2
 permalink: /:year/:month/:day/:title
