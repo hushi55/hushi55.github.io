@@ -9,7 +9,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}
 body,button,input,select,textarea{font-size:12px/1.5;}
 input,select,textarea{font-size:100%;}
-table{border-collapse:collapse;border-spacing:0;}
+table{border-collapse:collapse;border-spacing:0;margin-bottom: 25px;}
 th{text-align:inherit;}
 fieldset,img,a img{border:0;}
 iframe{display:block;}
@@ -71,7 +71,7 @@ pre ol{margin-left:25px;list-style-type:decimal;}
 .entry ul li{margin-bottom:5px;list-style:disc;line-height:1.8em;}
 .entry ol{margin-bottom:25px;margin-left:25px;}
 .entry ol li{margin-bottom:5px;list-style:decimal;line-height:1.1em;}
-.entry blockquote{margin-left:25px;font-size:16px;font-style:italic}
+.entry blockquote{margin-left:25px;font-size:16px;font-style:italic;background-color: #ddd;}
 .entry img{max-width:670px;display:block;margin:10px auto;}
 
 
