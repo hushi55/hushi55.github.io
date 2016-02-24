@@ -130,7 +130,8 @@ Lastly, Schemaless supports global indexes over the data.
 Below, we discuss an overview of the data model and some key features, 
 including the anatomy of a trip at Uber, with more in depth examples reserved for a followup article.
 
-> 
+> 我们构建了一个 key-value 存储系统，它允许我们保存任何  JSON 数据而不需要严格的 schema 检测。这个系统是使用 mysql 构建的，特点是数据以追加形式写入，支持失败
+而且当数据发生变化时，能够通知其他系统。最后，schemaless 支持全局的 index，随后我们讨论这个系统的数据模型和一些特性，包括全面的解析 uber 的系统，这些会在随后的文章给出。
 
 ## The Schemaless Data Model
 
@@ -140,20 +141,31 @@ once written, it cannot be overwritten or deleted. The cell is a JSON blob refer
 a column name, and a reference key called ref key. The row key is a UUID, 
 while the column name is a string and the reference key is an integer.
 
+> schemaless 是一个追加写入，三维稀疏 hash map，这个和 Google 的 Bigtable 系统非常相似。在 schemaless 中最小的数据单元叫做 cell，它是不可变；
+一旦写入，就不能覆盖或者删除。cell 是一个 JSON blob，可以通过一个 row key，column name 和 reference key 来引用。row key 是一个 UUID，
+column name 是个 string，reference key 是个整形数据。
+
 You can think of the row key as a primary key in a relational database, and the column name as a column. 
 However, in Schemaless there is no predefined or enforced schema and rows do not need to share column names; 
-in fact, the column names are completely defined by the application. T
-he ref key is used to version the cells for a given row key and column. 
+in fact, the column names are completely defined by the application. 
+The ref key is used to version the cells for a given row key and column. 
 So if a cell needs to be updated, 
 you would write a new cell with a higher ref key (the latest cell is the one with the highest ref key). 
 The ref key is also useable as entries in a list, but is typically used for versioning. 
 The application decides which scheme to employ here.
+
+> 你可以将 row key 看成是关系数据库中的主键，column name 是个一个 column。但是，在 schemaless 中不需要提前预定义 schema，也不需要强制定义 schema。
+事实上，column name 的定义完全由应用来决定。ref key 被用于版本管理，对于一个确定的 row key 和 column。所有当 cell 需要更新是，我们只需要重新写入一个 
+cell 但是这个 cell 只需要给定一个更高的 ref key。ref key 也可以作为一个属性，但是一般只是作为版本号，这个完全也由应用程序决定。
 
 Applications typically group related data into the same column, 
 and then all cells in each column have roughly the same application-side schema. 
 This grouping is a great way to bundle data that changes together, 
 and it allows the application to rapidly change the schema without downtime on the database side. 
 The example below elaborates more on this.
+
+> 应用程序一般使用同一个 column 来分组数据，这时这些 cell 应该有一个大概一致的 schema 对应用程序来说。这样组织数据的方式是非常好的，这样我们可以敏捷的修改应用程序
+而不需要在 database 层停机，下面使用一个列子来说明。
 
 ## Example: Trip Storage in Schemaless
 
@@ -162,6 +174,8 @@ let’s look at the anatomy of a trip at Uber. Trip data is generated at differe
 from pickup drop-off to billing, 
 and these various pieces of info arrive asynchronously as the people involved in the trip give their feedback, 
 or background processes execute. The diagram below is a simplified flow of when the different parts of an Uber trip occur:
+
+> 在我们讲解 schemaless 数据模型之前，我们来大概看看在 uber 中一个 trip 的过程，trip 数据的产生是随时的，账单的产生是线下的，还有各种优惠。我们通过下面一张图来看看：
 
 ![](/images/blog/store/SimplifiedUberTripDiagram-1024x377.png)
 
@@ -176,7 +190,13 @@ then certain set of processes will execute on the trip.
 Some of this info, such as a rider or driver rating (considered part of the notes in the above diagram), 
 could arrive days after the trip finished.
 
+> 一个 trip 包含 司机，乘客，和一个开始结束时间对。这些信息构成了 base trip，随后的票价的计算就是乘客的账单。在 trip 结束后，我们就需要计算票价，我们记账到乘客和司机两端。
+我们可能会添加一些评价，乘客和司机可以相互评价。我们将试图在过个信用卡中扣费，以一种情况是信用卡过期或者拒绝扣款。trip 的流程在 uber 中是数据驱动的。当数据添加时，
+一些随后的动作就会发生在这个 trip 上。列如：乘客和司机的相互评价，这个动作可以发生在这个 trip 结束后的很多天。
+
 So, how do we map the above trip model into Schemaless?
+
+> 如上所述，我们应该怎么设计我们的 trip 数据模型呢？
 
 ## The Trip Data Model
 
@@ -186,6 +206,10 @@ We have two trips (UUIDs trip_uuid1 and trip_uuid2) and four columns (BASE, STAT
 A cell is represented by a box, with a number and a JSON blob (abbreviated with {…}). 
 The boxes are overlaid to represent the versioning (i.e., the differing ref keys).
 
+> 我们使用斜体来表明 UUIDs，使用大写来表明是 column names，下面这个表格展示了一个最简单的数据模型版本。
+我们有两个 trip (UUIDs trip_uuid1 and trip_uuid2) 和四个 columns (BASE, STATUS, NOTES, and FARE ADJUSTMENT). 
+一个 cell 通过一个 box 来表示，其中包含了一个数字和 JSON blob。这个 box 通过版本的变化来覆盖。
+
 ![](/images/blog/store/TripDataModel-1024x522.png)
 
 trip_uuid1 has three cells: one in the BASE column, two in the STATUS column and none in the FARE ADJUSTMENTs column. 
@@ -193,12 +217,19 @@ trip_uuid2 has two cells in the BASE column, one in the NOTES column, and likewi
 For Schemaless, the columns are not different; so the semantics of the columns are defined by the application, 
 which in this case is the service Mezzanine.
 
+> trip_uuid1 有 3 个 cell：一个在 BASE column 中，两个在 STATUS column 中，FARE ADJUSTMENTs column 没有数据。
+trip_uuid2 的 BASE column 有两个 cells，一个在 NOTES column，通过 FARE ADJUSTMENTS column 列中没有数据。对于 schemaless 中，columns 是不同的，
+所以 columns 是由应用程序来定义语义的，这个是在 [Mezzanine][] 完成的。 
+
 In Mezzanine, the BASE column cells contain basic trip info, such as the driver’s UUID and the trip’s time of day. 
 The STATUS column contains the trip’s current payment status, where we insert a cell for each attempt to bill the trip. 
 (An attempt could fail if the credit card does not have sufficient funds or has expired.). 
 The NOTES column contains a cell if there are any notes associated with the trip 
 by the driver or left by an Uber DOps (Driver Operations employee). 
 Lastly the FARE ADJUSTMENTs column contains cells if the trip fare has been adjusted.
+
+> 在 [Mezzanine][] 服务中，BASE columns 包含基本的 trip 信息，例如司机的 UUID，trip 发生的时间。 STATUS column 中包含 trip 的当前支付状态，
+每次试图支付时，都会产生一个 cell。NOTES column 包含司机和乘客的评论。最后 FARE ADJUSTMENTs column  包含了这个 trip 的优惠信息。
 
 We use this column split to avoid data races and minimize the amount of data that needs to be written on updates. 
 The BASE column is written when a trip is finished, and thus typically only once. 
@@ -208,6 +239,9 @@ The NOTES column can similarly be written multiple times at some point after the
 but it is completely separate from the STATUS column writes. 
 Similarly, the FARE ADJUSTMENTS column is only written if the trip fare is changed, 
 for example due to an inefficient route.
+
+> 我们使用 column 来分割数据和最小化数据，BASE column 对于一个 trip 一般只会写入一次。 STATUS column 当试图支付这个 trip 是，这个是当 BASE column 写入数据时，
+或者当支付失败的时候会写入多次。NOTES column 同样可以写入多次，FARE ADJUSTMENTS 一般情况下也只能写入一次。
 
 ## Schemaless Triggers
 
