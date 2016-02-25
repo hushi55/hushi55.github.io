@@ -251,9 +251,14 @@ allowing the values in an instance to be viewed as a log of changes. For a given
 it is possible to listen on these changes and trigger functions based on them, 
 very much like an event bus system such as Kafka.
 
+> schemaless 一个关键的特性是有触发器，schemaless 的数据改变都会获取到通知。因为 cell 是不可变的，新的版本都是追加的，没一个 cell 都代表了一个变化或者一个版本。
+这样就允许一个值代表一个变化的日志。对一个给定的实例，它会监听所有的数据变化，这个会基于 Kafka 的事件系统非常相像。
+
 Schemaless triggers make Schemaless a perfect source-of-truth data store because, besides random access to the data, 
 downstream dependencies can use the trigger feature to monitor and trigger any application-specific code (a similar system is LinkedIn’s DataBus), 
 hence decoupling data creation and its processing.
+
+> schemaless 的触发器使得这个系统是一个可信任的数据源，数据是可以随机读取的，下游的依赖可以通过触发器来监控数据的变化，应用程序也可以通过这个来解耦数据。
 
 Among other use cases, 
 Uber uses Schemaless triggers to bill a trip when its BASE column is written to the Mezzanine instance. 
@@ -263,6 +268,9 @@ and will try to bill the trip by charging the credit card.
 The result of charging the credit card, whether it is a success or a failure, 
 is written back to Mezzanine in the STATUS column. This way the billing service is decoupled from the creation of the trip,
 and Schemaless acts as an asynchronous event bus.
+
+> 举个列子，uber 使用 schemaless 的触发器来触发账单当一个 trip 的 BASE column 被写入时。上面的例子中，当 trip_uuid1 的 BASE column 写入时，我们的账单服务就会
+读取 BASE column 的数据来尝试支付。无论是否支付成功，我们将在 STATUS column 中写入数据。账单服务和 trip 的数据解耦了，schemaless 实际上充当了事件总线。
 
 ![](/images/blog/store/SchemalessTriggersExample-1024x506.png)
 
@@ -274,11 +282,15 @@ Querying these indexes is efficient,
 because the index query only need go to a single shard to find the set of cells to return. 
 In fact, the queries can further be optimized, 
 as Schemaless allows the cell data to be denormalized directly into the index. 
-Having the denormalized data in the index means that a
-n index query only need to consult one shard for both querying and retrieving the information. 
+Having the denormalized data in the index means 
+that an index query only need to consult one shard for both querying and retrieving the information. 
 In fact, we typically recommend Schemaless users to denormalize data that they might think they need into 
 the indexes in case they need to query any information besides retrieving a cell directly via the row key. 
 In a sense, we thereby trade storage for fast query lookup.
+
+> 最后，schemaless 支持在 JSON blob 属性上定义索引。索引世界上是方面查询预定义的，有索引的查询是高效的，这可以在单个实例中找到所有的 cell。
+事实上，这些查询将来还可以优化，schemaless 允许 cell 中的非规范化的数据添加到索引中。建立非规范的数据的索引，意味着一个查询只需要考虑一个实例。
+实际上，我们一般只讲非规范数据中有用的数据来建立索引，因为获取一个 cell 是通过 row key，因此我们可以快速的获取到数据。
 
 As an example for Mezzanine, we have a secondary index defined allowing us to find a given driver’s trips. 
 We have denormalized the trip creation time and the city where the trip was taken. 
@@ -286,6 +298,9 @@ This makes it possible to find all the trips for a driver in a city within a giv
 Below we give the definition of the driver_partner_index in YAML format, 
 that is part of the trips datastore and defined over 
 the BASE column (the example is annotated with comments using the standard #).
+
+> 在 Mezzanine 例子中，我们有一个定义在 trip 上的二级索引。我们需要按照创建时间，我城市来获取 trip 数据。二级索引使得获取给定一个时间范围的城市数据成为可能。
+下面我们给出了一个 YAML 格式的索引示例，这个是定义在 BASE column 上的。
 
 
 ``` sql
@@ -310,6 +325,9 @@ Using this index, we can find trips for a given driver_partner_uuid filtered by 
 In this example we only use fields from the BASE column, but Schemaless supports denormalizing data from multiple columns, 
 which would amount to multiple entries in the above column_def list.
 
+> 使用这个索引我们通过过滤 city_uuid， trip_created_at 来查找 trips。在这个例子中我们仅仅使用了 BASE column 列中的数据，其实 schemaless 支持多个 columns 的
+非规范数据建立索引，我只需要在 column_def 中定义多个 columns 就行。
+
 As mentioned Schemaless has efficient indexes, achieved by sharding the indexes based on a sharding field. 
 Therefore the only requirement for an index is 
 that one of the fields in the index is designated as a shard field 
@@ -320,12 +338,19 @@ That means on query time we only need to consult one shard for retrieving the in
 One thing to note about the sharding field is that it should have a good distribution. 
 UUIDs are best, city ids are suboptimal and status fields (enums) are detrimental to the storage.
 
+> 通过对切割字段构建 index，使得 schemaless 有一个高效的 index。对于一个 index 来说唯一的要求就是索引的字段是一个切割字段。
+切分字段确定哪些碎片索引条目应该写入或检索。原因是我们需要供应切分字段查询索引。这意味着在查询时我们只需要咨询检索索引条目的一个碎片。
+有一件事需要注意分片字段是它应该有一个良好的分布。uuid是最好的，城市id和状态不佳字段存储都是不好的。
+
 For other than the shard field, Schemaless supports equality, 
 non-equality and range queries for filtering, 
 and supports selecting only a subset of the fields in the index 
 and retrieving specific or all columns for the row key that the index entries points to. 
 Currently, the shard field must be immutable, so Schemaless always only need to talk with one shard. 
 But, we’re exploring how to make it mutable without too big of a performance overhead.
+
+> 对于切割字段还说，schemaless 索引支持等于，不等于，和范围过滤查询，支持选择字段的一个子集合和获取指定 columns 的 row key。
+当前要求切割的字段是不可变的，所以 schemaless 总是需要和一个 shard 通信。但是我们正在探索使得这个是一个可变，但是不会损失很大的性能。
 
 The indexes are eventually consistent; whenever we write a cell we also update the index entries, 
 but it does not happen in the same transaction. 
@@ -335,6 +360,10 @@ which would incur significant overhead. With eventually consistent indexes we av
 but Schemaless users may see stale data in the indexes. 
 Most of the time the lag is well below 20ms between cell changes and the corresponding index changes.
 
+> 索引是最终一致性的；无论我们是写一个 cell 还是更新这个 cell，但是这两个操作是不会发生在一个事务中的。cells 中的数据和 index 中的记录一般情况下是不属于同一个 shard 的。
+所以我们如果要提供一致性索引，我们需要引入两阶段提交，这将带了巨大的消耗。使用最终一致性的 index 可以避免这个消耗，这使得 schemaless 中的用户查询到的数据不是最新的。
+现在的系统中，我们索引中的数据大概延迟 cell 中的数据 20 ms。
+
 ## Summary
 
 We’ve given an overview of the data model, triggers and indexes, 
@@ -343,6 +372,9 @@ In future posts,
 we’ll look at a few other features of Schemaless to illustrate 
 how it’s been a welcome companion to the services in Uber’s infrastructure: 
 more on architecture, the use of MySQL as a storage node, and how we make triggering fault-tolerant on the client-side.
+
+> 上面我们看到了数据模型，触发器，索引，这些关键性的特性在 schemaless 系统是如何定义的。在随后的文章中，我们将看到其他的特性比如：更多架构上信息，如何使用 Mysql 作为一个
+存储节点，和如何构建触发器使得是一个可容错的对于 client 端来说。
 
 ## 参考
 - [Uber's Scalable Datastore Using MySQL 1](https://eng.uber.com/schemaless-part-one/)
