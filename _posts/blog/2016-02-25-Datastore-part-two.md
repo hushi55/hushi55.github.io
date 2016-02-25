@@ -187,13 +187,16 @@ A lot of the power (and simplicity) of Schemaless comes from our use of MySQL in
 Schemaless itself is a relatively thin layer on top of MySQL for routing requests to the right database. 
 By using MySQL indexes and the caching built into InnoDB, we get fast query performance for cells and secondary indexes.
 
-> 
+> schemaless 的大量优点就是我们在 storage 节点中使得的是 Mysql。schemaless 自身是一个相对简单在 mysql 之上提供路由功能。
+通过 Mysql 的 indexes 和 InnoDB 内置的 cache，我们获取到很快的查询功能和二级索引。
 
 Each Schemaless shard is a separate MySQL database, and each MySQL database server contains a set of MySQL databases. 
 Each database contains a MySQL table for the cells (called the entity table) and a MySQL table for each secondary index, 
 along with a set of auxiliary tables. 
 Each Schemaless cell is a row in the entity table and has the following MySQL table definition:
 
+> 每一个 schemaless 分片就是一个单独的 Mysql 数据库实例，每一个 Mysql 数据库实例可以包含一系列的数据库。每一个数据库为 cell 设计一个 Mysql 的表，
+Mysql 的表会一个二级索引，这个是有一系列的辅助表组成的。每一个 cell 是 table 中的一条记录，这个定义如下：
 
 Name | Type
 :---|:---:
@@ -209,26 +212,41 @@ Having added_id as the primary key makes MySQL write the cells linearly on disk.
 Furthermore, added_id serves as a unique pointer for each cell 
 that Schemaless triggers use to efficiently extract cells in order of insertion time.
 
+> added_id 列是一个自增的整形数据，这个也是 Mysql 的主键在这个表中。added_id 作为主键使得 Mysql 写入 cell 是在磁盘上是线性的。
+此外，added_id 唯一性的指向一个 cell，schemaless 触发器能够高效的按照插入时间来处理 cell。
+
 The row_key, column_name, and ref_key columns contain, unsurprisingly, the row key, 
 column name and ref key for each Schemaless cell. To efficiently look up a cell via these three, 
 we define a compound MySQL index on these three columns. 
 Thus, we can efficiently find all the cells for a given row key and column name.
 
+> row_key, column_name, 和 ref_key 也可以唯一性在 schemaless 系统标示一个 cell。为了高效的查询这个 cell，我们在 Mysql 中在这三列上定义一个 index。
+因此，我们可以高效的根据 row key 和 column name 来查询。
+
 The body column contains the JSON object of the cell as a compressed MySQL blob. 
 We experimented with various encodings and compression algorithms 
-and ended up using MessagePack and ZLib due to the compression speed and size. (More on this in a future article.) 
+and ended up using [MessagePack][] and [ZLib][] due to the compression speed and size. (More on this in a future article.) 
 Lastly, the created_at column is used to timestamp 
 the cell when we insert it and is useable by Schemaless triggers to find cells after a given date.
+
+> body column 是一个 JSON 对象，使用的 Mysql 的 blob 数据存储。我们尝试了各种编码和压缩算法，
+从压缩速度和大小上最后选择了 [MessagePack][] 和 [ZLib][] 算法（这个将来会有单独的文章）。
+最后，created_at cell 写入时的时间戳，被 schemaless 触发器用来根据时间来查找这个 cell。
 
 With this setup, we let the client control the schema without making changes to the layout in MySQL; 
 we are able to look up cells efficiently. 
 Furthermore, the added_id column makes inserts write out linearly on disk 
 so we can efficiently access the data as a partitioned log.
 
+> 有了这些设置，我们可以让 client 端来控制 schema，而无需改变 Mysql 中的布局；我们可以看到 cell 是高效的。此外， added_id column 使得我们写入磁盘是线性的，
+所有我们可以像分区日志一样高效的获取数据 。
+
 ## Summary
 
 Schemaless today is the production datastore of a large number of services in Uber’s infrastructure. 
 Many of our services rely heavily on the high availability and scalability of Schemaless.
+
+> 现在 schemaless 系统大量存在 uber 的基础设施中。大量的服务已经使用了这个高可用，高可扩展的 schemaless 系统。
 
 ## 参考
 - [Uber's Scalable Datastore Using MySQL 1](https://eng.uber.com/schemaless-part-one/)
@@ -240,4 +258,6 @@ Many of our services rely heavily on the high availability and scalability of Sc
 [Mezzanine]: http://eng.uber.com/mezzanine-migration/ "Mezzanine"
 [Friendfeed]: https://backchannel.org/blog/friendfeed-schemaless-mysql "Friendfeed"
 [Pinterest]: http://gotocon.com/dl/goto-aar-2014/slides/MartyWeiner_ScalingPinterest.pdf "Pinterest"
+[MessagePack]: http://msgpack.org/index.html "MessagePack"
+[ZLib]: http://www.zlib.net/ "ZLib"
 
