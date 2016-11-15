@@ -2,7 +2,8 @@ auto: true
 
 #markdown: rdiscount
 markdown: kramdown
-pygments: true
+#pygments: true
+highlighter: rouge
 paginate: 2
 permalink: /:year/:month/:day/:title
 blognewlist: 5
