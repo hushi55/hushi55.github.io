@@ -203,21 +203,41 @@ $(document).ready(function(){
     }
 
    //<!-- 多说评论框 start -->
-	(function() {
-
-		var ds_div = '<div class="ds-thread entry" style="clear:none" data-thread-key="' + data_thread_key + '" ' +
-			' data-title="' + data_title + '"' +
-			' data-url="' + data_url +'"></div>';
-		$('#content').append(ds_div);
-
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0]
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
+	// (function() {
+   //
+	// 	var ds_div = '<div class="ds-thread entry" style="clear:none" data-thread-key="' + data_thread_key + '" ' +
+	// 		' data-title="' + data_title + '"' +
+	// 		' data-url="' + data_url +'"></div>';
+	// 	$('#content').append(ds_div);
+   //
+	// 	var ds = document.createElement('script');
+	// 	ds.type = 'text/javascript';ds.async = true;
+	// 	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	// 	ds.charset = 'UTF-8';
+	// 	(document.getElementsByTagName('head')[0]
+	// 	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	// })();
 	//<!-- 多说评论框 end -->
+
+    <!-- 来必力City版安装代码 -->
+    (function(d, s) {
+
+        var ds_div = '<div id="lv-container" data-id="city" data-uid="MTAyMC8zMTMzOC83ODg3" class="entry" style="clear:none"><noscript> 为正常使用来必力评论功能请激活JavaScript</noscript></div>';
+        $('#content').append(ds_div);
+
+
+
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    <!-- City版安装代码已完成 -->
 
 
 });
