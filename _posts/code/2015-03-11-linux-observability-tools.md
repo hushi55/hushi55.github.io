@@ -7,7 +7,7 @@ tags: [linux]
 ---
 分享一个 linux 下的调试工具图：
 
-![](http://7tsy8h.com1.z0.glb.clouddn.com/linux_observability_tools.png)
+![](/images/linux-trace/linux_observability_tools.png)
 
 原图出处为[这里](http://www.brendangregg.com/linuxperf.html)。
 

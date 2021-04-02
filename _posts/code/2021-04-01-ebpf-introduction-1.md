@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ebpf 介绍
+title: ebpf 介绍 1
 description: linux ebpf 相关介绍
 category: code
 tags: [linux, kernel, ebpf]
@@ -62,6 +62,7 @@ ebpf 在可见性领域可以不在依赖操作系统的静态数据导入，而
 ## 参考
 - [ebpf.io](https://ebpf.io/)
 - [cilium](https://docs.cilium.io/en/stable/bpf/)
+- [New GKE Dataplane](https://cloud.google.com/blog/products/containers-kubernetes/bringing-ebpf-and-cilium-to-google-kubernetes-engine)
 
 
 [-10]:    http://hushi55.github.io/  "-10"
