@@ -13,7 +13,7 @@ ebpf 由以下几个模块组成
 - RISC instruction set ---> 一个精简指令集
 - maps ---> 高性能存储 key/values 设施
 - helper functions ---> linux kernel 通信机制
-- tail calls ---> 调用其他 bfp 程序
+- tail calls ---> 调用其他 bpf 程序
 - pinning objects ---> 虚拟文件系统
 - offloaded  ---> 提升性能的一种机制
 

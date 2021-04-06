@@ -258,6 +258,19 @@ $(document).ready(function(){
             e.parentNode.insertBefore(j, e);
         }
 
+        var ds_div = '<div id="gitalk-container" class="gitalkentry"></div>';
+        $('#content').append(ds_div);
+        const gitalk = new Gitalk({
+            clientID: '2fe553c1b8790a2ba353',
+            clientSecret: '3515b38966784278b11cc785fe9240367e9264ba',
+            repo: 'hushi55.github.io',      // The repository of store comments,
+            owner: 'hushi55',
+            admin: ['hushi55'],
+            id: location.pathname,      // Ensure uniqueness and length less than 50
+            distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+        gitalk.render('gitalk-container')
+
     })(document, 'script');
 
 
