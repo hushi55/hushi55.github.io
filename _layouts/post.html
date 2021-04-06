@@ -40,6 +40,16 @@ layout: default
     .det-text p {
     	margin-bottom: 2px;
     }
+
+    .gitalkentry {
+        clear: none;
+        margin-bottom: 40px;
+        width: 680px;
+        float: left;
+        background: #fff;
+        padding: 30px;
+        box-shadow: 0 2px 6px #ccc;
+    }
 </style>
 
 <div id="content">
@@ -136,7 +146,7 @@ layout: default
 <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
 <script src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
 <script>
-    var ds_div = '<div id="gitalk-container"></div>\n';
+    var ds_div = '<div id="gitalk-container" class="gitalkentry"></div>';
     $('#content').append(ds_div);
     const gitalk = new Gitalk({
         clientID: '2fe553c1b8790a2ba353',
