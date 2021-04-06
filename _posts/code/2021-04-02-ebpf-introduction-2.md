@@ -45,9 +45,20 @@ ebpf 程序的一些限制
 - 可以使用 ebpf tail call，但是最多也只能有 33 个 tail call
 
 ## Helper Functions
+![](/images/ebpf/ebpf_helper-6e18b76323d8520107fab90c033edaf4.png)
+
+eBPF 不能直接调用 kernel 的函数，因为这么做会导致 eBPF 会和 kernel 的版本绑定，
+导致向下兼容非常困难，调用 kernel 函数的能力是通过 helper functions 来实现的，
+这样通过保证 helper functions 的 ABI 的稳定性来保证 eBPF 的向下兼容性。
+
+- 调用随机数函数 
+- 获取当前时间和日期
+- eBPF map 读写操作
+- 获取当前 进程/cGroup 上下文
+- 操作网络数据包
 
 ## Maps
-![](/images/ebpf/bpf_map.png)
+![](/images/ebpf/ebpf_map_architecture-e7909dc59d2b139b77f901fce04f60a1.png)
 map 是一个高性能 key/value 存储系统，这个是在 linux kernel 中实现的。
 map 的主要用途是在 ebpf 和 ebpf，以及 ebpf 和 应用程序中共享数据。
 当前一个 ebpf 能使用 64 中不同类型的 map。
@@ -70,6 +81,33 @@ map 的主要用途是在 ebpf 和 ebpf，以及 ebpf 和 应用程序中共享�
 
 ## Others
 
+### eBPF Safety
+通过上面的介绍的可以知道 eBPF 是一种可编程的 kernel 技术，那么如果 eBPF 不安全将影响 kernel 的稳定性。
+eBPF 是通过下面的手段来保证 eBPF 程序对于 kernel 是安全的。
+#### Required Privileges
+只有  privileged mode (root)/capability CAP_BPF 权限的程序来能 load 和 run eBPF 程序。
+#### Verifier
+![](/images/ebpf/ebpf_loader-7eec5ccd8f6fbaf055256da4910acd5a.png)
+当 eBPF 程序被加载后，会通过 eBPF verifier 来校验 eBPF 程序是否满足以下要求
+
+- eBPF 程序不能存在死循环和 block kernel 的代码
+- eBPF 程序不能包含未初始化的变量
+- eBPF 程序必须是有限的大小，不能太大
+- eBPF 程序必须有限的复杂性
+
+#### Hardening
+
+- Program execution protection
+  * eBPF 程序加载完毕后，kernel 将设置 eBPF 程序为只读。
+- Mitigation against Spectre
+  
+- Constant blinding
+  * 所有的 eBPF 程序常量在加载后 blinding，防止通过常量注入可执行代码，阻止 JIT 攻击。
+
+#### Abstracted Runtime Context
+eBPF 不能直接访问 kernel 中的任意内存，只能通过 helper function 来访问上下文之外的数据。
+如果在安全的条件， eBPF 程序能够修改某些数据。
+
 ### Object Pinning
 ![](/images/ebpf/bpf_fs.png)
 ebpf 程序和 map 本质上都是 linux kernel 中的一个种资源。
@@ -79,7 +117,7 @@ ebpf 程序和 map 本质上都是 linux kernel 中的一个种资源。
 这个文件系统就是 object pinning，通过这个技术就可以使用 linux 匿名文件系统来访问这些资源。
 
 ### Tail Calls
-![](/images/ebpf/bpf_tailcall.png)
+![](/images/ebpf/ebpf_tailcall-106a9d37e6b2b88e24b923d96e852dd5.png)
 如图所示，tail calls 是一种 ebpf 程序调用另外一个 ebpf 程序，但是这个调用不像普通的函数调用，
 tail calls 不会返回上一级调用，并且没有普通函数调用的寄存器 push/put 消耗，看起来就是一次 long jump，
 两个 ebpf 函数使用的是同一个栈空间。
