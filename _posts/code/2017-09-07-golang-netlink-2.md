@@ -58,7 +58,7 @@ Equivalent to: `tc qdisc show`.
 Equivalent to: `tc qdisc replace $qdisc`
 Equivalent to: `ip route add $route`
 Equivalent to: `ip route del $route`
-Equivalent to: &#39;ip route get&#39;.
+Equivalent to: `ip route get`.
 Equivalent to: `ip route show`.
 Equivalent to: `ip route replace $route`
 Equivalent to: ip rule add
@@ -145,24 +145,24 @@ Equivalent to: `ip xfrm state get ID [ mark MARK [ mask MASK ] ]`.
 从上面可以知道可以互相代替的命令分为了 3 打类
 
 - ip
-    address - protocol (IP or IPv6) address on a device.
-    addrlabel  - label configuration for protocol address selection.
-    l2tp   - tunnel ethernet over IP (L2TPv3).
-    link   - network device.
-    maddress - multicast address.
-    monitor - watch for netlink messages.
-    mroute - multicast routing cache entry.
-    mrule  - rule in multicast routing policy database.
-    neighbour - manage ARP or NDISC cache entries.
-    netns  - manage network namespaces.
-    ntable - manage the neighbor cache's operation.
-    route  - routing table entry.
-    rule   - rule in routing policy database.
-    cp_metrics/tcpmetrics - manage TCP Metrics
-    token  - manage tokenized interface identifiers.
-    tunnel - tunnel over IP.
-    tuntap - manage TUN/TAP devices.
-    xfrm   - manage IPSec policies.
+    * address - protocol (IP or IPv6) address on a device.
+    * addrlabel  - label configuration for protocol address selection.
+    * l2tp   - tunnel ethernet over IP (L2TPv3).
+    * link   - network device.
+    * maddress - multicast address.
+    * monitor - watch for netlink messages.
+    * mroute - multicast routing cache entry.
+    * mrule  - rule in multicast routing policy database.
+    * neighbour - manage ARP or NDISC cache entries.
+    * netns  - manage network namespaces.
+    * ntable - manage the neighbor cache's operation.
+    * route  - routing table entry.
+    * rule   - rule in routing policy database.
+    * cp_metrics/tcpmetrics - manage TCP Metrics
+    * token  - manage tokenized interface identifiers.
+    * tunnel - tunnel over IP.
+    * tuntap - manage TUN/TAP devices.
+    * xfrm   - manage IPSec policies.
 - bridge
 - tc
 
