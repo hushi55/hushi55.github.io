@@ -7,7 +7,7 @@ tags: [linux]
 ---
 ## kernel 编译步骤
 
-<pre>
+```shell
 1、获取内核源码，解压至/usr/src
 	# tar xf linux-3.13.5.tar.xz -C /usr/src
     # ln -sv /usr/src/linux-3.13.5  /usr/src/linux
@@ -27,25 +27,24 @@ tags: [linux]
 6、验正并测试
     # cat /boot/grub/grub.conf
     查看新内核是否已经添加, 而后重启系统并测试
-</pre>
+```
 
 ## make 清除
 
-<pre>
+```shell
 make clean
 make mrproper
-</pre>
-
+```
 
 ## perf，systemtap 相关的参数
 
-<pre>
+```shell
 # perf 支持 uprobe
 CONFIG_UPROBES=y
 
 # systemtap 支持 uspace 跟踪
 CONFIG_UTRACE=y
-</pre>
+```
 
 ## 参考
 - [vm 下编译 kernel 出现 could not find module xxxx ](http://smilejay.com/2013/11/kernel-install-error-could-not-find-module/)

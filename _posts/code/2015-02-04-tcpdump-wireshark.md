@@ -8,7 +8,7 @@ tags: [tcpdump, wireshark, linux]
 ## 遇到的问题
 今天同事遇到一个问题，在是用 solr 搜索时，在程序中搜索出来的结果没有，但是使用 solr 提供的网页搜索界面搜索出来但是有 2 条结果。跟踪程序源代码时发现程序中也是通过 httpclient 发送的 http 请求，那么理论上也该能够搜索出结果，所以初步怀疑是 httpclient get 请求时参数太长被截断了，因为我们在 solr 中的 fq 字段填入了如下数据：
 
-<pre>
+```shell
 network:52a05d2d1a06f6672bc4b912
 network:52a05ca71a06f6672bc4b883
 network:52a05c701a06f6672bc4b863
@@ -37,7 +37,7 @@ network:547d68c1e4b0651f9fbd4c25
 network:493003
 network:325310
 participants:4e420a24cce7a2ad930fc948
-</pre>
+```
 
 既然是这样那么我们只需要比对 solr 网页端的  tcp 包和程序发送的 tcp 包是不是一样就应该能找出问题。
 
@@ -54,9 +54,9 @@ participants:4e420a24cce7a2ad930fc948
 ## linux 下的抓包软件 tcpdump
 在 linux 和 unix 下首推的就是 tcpdump 这个抓包软件，至于这个命令如何使用，可以参考 man 手册。我们使用在如下命令抓取 tcp 的包：
 
-<pre>
+```shell
 tcpdump -i lo dst port 10195 -o solr.cap
-</pre>
+```
 
 - -i：指定 lo 网卡
 - dst port 10195：指定抓取目标端口为 10195 的包

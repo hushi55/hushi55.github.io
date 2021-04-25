@@ -11,7 +11,7 @@ nginx 内存布局结构图：
 
 来看看相关的数据结构：
 
-<pre>
+```cgo
 typedef struct {
     u_char               *last;
     u_char               *end;
@@ -29,11 +29,11 @@ struct ngx_pool_s {
     ngx_pool_cleanup_t   *cleanup;
     ngx_log_t            *log;
 };
-</pre>
+```
 
 我们先来看看 pool 的 create 结合上面的图来理解：
 
-<pre>
+```cgo
 ngx_pool_t *
 ngx_create_pool(size_t size, ngx_log_t *log)
 {
@@ -70,11 +70,11 @@ ngx_create_pool(size_t size, ngx_log_t *log)
 
     return p;
 }
-</pre>
+```
 
 看完了 create，我们来看看当想 pool 中申请内存的算法：
 
-<pre>
+```cgo
 void *
 ngx_palloc(ngx_pool_t *pool, size_t size)
 {
@@ -110,11 +110,11 @@ ngx_palloc(ngx_pool_t *pool, size_t size)
 
     return ngx_palloc_large(pool, size);
 }       
-</pre>
+```
 
 看完了小块内存的分配，我们来看看大块内存的分配：
 
-<pre>
+```cgo
 static void *
 ngx_palloc_large(ngx_pool_t *pool, size_t size)
 {
@@ -156,7 +156,7 @@ ngx_palloc_large(ngx_pool_t *pool, size_t size)
 
     return p;
 }
-</pre>
+```
 
 ## 参考
 - http://my.oschina.net/victorlovecode/blog/344422

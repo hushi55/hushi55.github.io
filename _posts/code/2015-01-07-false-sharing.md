@@ -8,7 +8,7 @@ tags: [java, linux, perf, falsesharing, cpu]
 ## 引子
 我们还是从实验开始，看下面这两端段程序：
 
-<pre>
+```java
 public final class FalseSharing implements Runnable {
 	public static int NUM_THREADS = 4; // change
 	public final static long ITERATIONS = 500L * 1000L * 1000L;
@@ -64,8 +64,9 @@ public final class FalseSharing implements Runnable {
 //				}
 	}
 }
-</pre>
-<pre>
+```
+
+```java
 public final class NoFalseSharing implements Runnable {
 	public static int NUM_THREADS = 4; // change
 	public final static long ITERATIONS = 500L * 1000L * 1000L;
@@ -120,12 +121,12 @@ public final class NoFalseSharing implements Runnable {
 		}
 	}
 }
-</pre>
+```
 
 这两段程序只是 NoFalseSharing 填充了 7 个 long 型的数据，其他没有什么不同。
 我们来看看这俩段程序运行的时间
 
-<pre>
+```shell
 [root@centos101 hushi]# time java FalseSharing
 starting....
 duration = 34082260485
@@ -141,7 +142,7 @@ real	0m16.400s
 user	0m25.026s
 sys		0m0.039s
 [root@centos101 hushi]#
-</pre>
+```
 
 很明显 NoFalseSharing 的运行时间比  FalseSharing 小了将近 6 倍。why？
 
@@ -151,13 +152,14 @@ sys		0m0.039s
 - cpu 如何组织和管理这些缓存的？
 - cpu 是如何确保这么多 cache 中数据的一致性的？
 
-对于第一个问题，我简单的描述下，cpu 对于 cache 的管理不可能是一个 byte 一个 byte 的管理的，因为这样效率就太低了。cpu 将多个 byte 作为一个单员来管理，这个单员就叫做  cacheline，我们可以在 linux 下通过如下命令来查看一个 cacheline 的大小
+对于第一个问题，我简单的描述下，cpu 对于 cache 的管理不可能是一个 byte 一个 byte 的管理的，因为这样效率就太低了。
+cpu 将多个 byte 作为一个单员来管理，这个单员就叫做  cacheline，我们可以在 linux 下通过如下命令来查看一个 cacheline 的大小
 
-<pre>
+```shell
 [root@centos101 ~]# cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size
 64
 [root@centos101 ~]#
-</pre>
+```
 
 可以看到一个 cacheline 的大小是 64 个字节。
 
@@ -172,7 +174,8 @@ M,E,S和I代表使用MESI协议时缓存行所处的四个状态：
 - S(共享, Shared)：缓存行内容和内存中的一样,有可能其它处理器也存在此缓存行的拷贝
 - I(无效, Invalid)：缓存行失效，不能使用 。
 
-通过上面的介绍我们知道了 CPU 内部是如何组织和管理 cache 的，一个 cacheline 有 64 字节之多，那么当有两个线程都修改了一个 cacheline 中的两个不同的数据，根据 MESI 一致性协议，这个 cacheline 应该是失效的，应该和主存同步数据，这个如图所示：
+通过上面的介绍我们知道了 CPU 内部是如何组织和管理 cache 的，一个 cacheline 有 64 字节之多，
+那么当有两个线程都修改了一个 cacheline 中的两个不同的数据，根据 MESI 一致性协议，这个 cacheline 应该是失效的，应该和主存同步数据，这个如图所示：
 
 ![](http://7tsy8h.com1.z0.glb.clouddn.com/@/cpu/false_sharing1.jpg{{ site.watermark }})
 
@@ -185,7 +188,7 @@ M,E,S和I代表使用MESI协议时缓存行所处的四个状态：
 
 所以猜测应该是 NoFalseSharing L1 级 cache 的  miss 事件应该更少。既然是 L1 级 cache 会失效，那么我们来看看实验的结果：
 
-<pre>
+```shell
 [root@centos101 hushi]# perf stat -e L1-dcache-load-misses java FalseSharing
 starting....
 duration = 35808081578
@@ -209,14 +212,14 @@ duration = 6262425464
       16.375648903 seconds time elapsed
 
 [root@centos101 hushi]#
-</pre>
+```
 
 从上面的实验的数据中可以看到，确实是 NoFalseSharing 更少，大概相差 5 倍左右，这根实验的运行时间相差大概一致。
 
 ## 改进
 我们知道了 false sharing 的产生的原因，由于 java 语言的特殊性，java 对象在内存中的布局，对象是要占一定的内存的，上面 NoFalseSharing 的填充方法有待改进。
 
-<pre>
+```java
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
@@ -411,12 +414,11 @@ public final class SuperNoFalseSharing implements Runnable {
 	        return Long.toString(get());
 	    }
 	}
-
-
 }
-</pre>
+```
 
-将 value 存放在 long 型数组中，左右两边各有 7 个元素，这样保证一定加载到一个 cacheline 中。这个技巧就是 [disruptor](https://github.com/LMAX-Exchange/disruptor/wiki/Introduction) 无锁队列使用的技巧。
+将 value 存放在 long 型数组中，左右两边各有 7 个元素，这样保证一定加载到一个 cacheline 中。
+这个技巧就是 [disruptor](https://github.com/LMAX-Exchange/disruptor/wiki/Introduction) 无锁队列使用的技巧。
 
 
 [-10]:    http://hushi55.github.io/  "-10"

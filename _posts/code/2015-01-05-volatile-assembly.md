@@ -8,7 +8,7 @@ tags: [java, jvm, assmebly]
 ## 一个程序
 我们有下面这段程序代码：
 
-<pre>
+```java
 package edu.hushi.jvm;
 
 /**
@@ -47,7 +47,7 @@ public class VisibilityTest extends Thread {
     }
 
 }
-</pre>
+```
 
 程序比较简单，在主线程中启动一个线程，这个线程不停的对局部变量做自增操作，主线程休眠 1 秒中后改变启动线程的循环控制变量，想让它停止循环。这个程序在 client 模式下是能停止线程做自增操作的，**但是在 server 模式先将是无限循环**。若是改成
 
@@ -60,14 +60,14 @@ private volatile boolean stop;
 ## HSDIS 介绍
 首先我们介绍一个工具，HSDIS是由[Project Kenai](http://kenai.com/projects/base-hsdis)提供并得到Sun官方推荐的HotSpot VM JIT编译代码的反汇编插件，作用是让HotSpot的-XX:+PrintAssembly指令调用它来把动态生成的本地代码还原为汇编代码输出，同时还生成了大量非常有价值的注释，这样我们就可以通过输出的代码来分析问题。读者可以根据自己的操作系统和CPU类型从Kenai的网站上下载编译好的插件，直接放到JDK_HOME/jre/bin/client和JDK_HOME/jre/bin/server目录中即可。如果没有找到所需操作系统（譬如Windows的就没有）的成品，那就得自己拿源码编译一下，或者去[HLLVM圈子](http://hllvm.group.iteye.com/)中下载也可以，[这里](http://fcml-lib.com/download.html)也有 win32 和 win64 编译好的。
 
-<pre>
+```shell
 -server
 -Xcomp
 -XX:+UnlockDiagnosticVMOptions
 -XX:CompileCommand=dontinline,*VisibilityTest.run
 -XX:CompileCommand=compileonly,*VisibilityTest.run
 -XX:+PrintAssembly
-</pre>
+```
 
 其中
 
@@ -81,7 +81,7 @@ private volatile boolean stop;
 ## assembly
 以下是 **没有** volatile 修饰的 assembly 代码
 
-<pre class="nowordwrap">
+```shell
 Java HotSpot(TM) Server VM warning: PrintAssembly is enabled; turning on DebugNonSafepoints to gain additional output
 CompilerOracle: dontinline *VisibilityTest.run
 CompilerOracle: compileonly *VisibilityTest.run
@@ -137,11 +137,11 @@ Argument 0 is unknown.RIP: 0x193bf80 Code size: 0x00000050
   0x0193bfcf: hlt
 finish main
 true
-</pre>
+```
 
 以下是 **有** volatile 修饰的 assembly 代码
 
-<pre class="nowordwrap">
+```shell
 Java HotSpot(TM) Server VM warning: PrintAssembly is enabled; turning on DebugNonSafepoints to gain additional output
 CompilerOracle: dontinline *VisibilityTest.run
 CompilerOracle: compileonly *VisibilityTest.run
@@ -198,7 +198,7 @@ Argument 0 is unknown.RIP: 0x1c7c780 Code size: 0x00000050
 finish loop,i=1109307815
 finish main
 true
-</pre>
+```
 
 以上测试环境为
 

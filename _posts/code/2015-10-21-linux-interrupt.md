@@ -13,7 +13,7 @@ linux interrupt 在 linux 有两个比较重要的数据视图
 
 我们先来看看 /proc/interrupts 这个视图是怎么样的：
 
-<pre class="nowordwrap">
+```shell
 [root@docker221 ~]# cat /proc/interrupts 
             CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7       
    0:        101          0          0          0          0          0          0          0   IO-APIC-edge      timer
@@ -93,18 +93,18 @@ linux interrupt 在 linux 有两个比较重要的数据视图
  ERR:          0
  MIS:          0
 [root@docker221 ~]#
-</pre>
+```
 
 其中每列依次为：irq 的编号，irq 中 cup 上的累积处理次数，中断控制器的名字，irq的名字，以及驱动程序注册该irq时使用的名字。
 
 其中 /proc/irq 的每个子目录对应的是一个 interrupt 编号。
 
-<pre>
+```shell
 [root@docker221 114]# pwd
 /proc/irq/114
 [root@docker221 114]# ls
 affinity_hint  eth0  node  smp_affinity  smp_affinity_list  spurious
-</pre>
+```
 
 其中比较常用的文件的作用：
 

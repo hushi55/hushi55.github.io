@@ -6,7 +6,7 @@ category: code
 tags: [linux, java, cacheline, cpu, pref]
 ---
 ## 引子
-<pre>
+```java
 public class L1CacheMiss1 {
 	private static final int RUNS = 10;
 	private static final int DIMENSION_1 = 1024 * 1024;
@@ -45,9 +45,9 @@ public class L1CacheMiss1 {
 			System.out.println("duration = " + (System.nanoTime() - start));
 	}
 }
-</pre>
+```
 
-<pre>
+```java
 public class L1CacheMiss2 {
 	private static final int RUNS = 10;
 	private static final int DIMENSION_1 = 1024 * 1024;
@@ -86,12 +86,12 @@ public class L1CacheMiss2 {
 			System.out.println("duration = " + (System.nanoTime() - start));
 	}
 }
-</pre>
+```
 
 这两个程序比较简单，就是  L1CacheMiss1，L1CacheMiss2 遍历数组的方向不一样。我们可以看看这两个程序各自需要的时间。
 L1CacheMiss1:
 
-<pre>
+```shell
 [root@centos101 hushi]# time java L1CacheMiss1
 starting....
 0
@@ -101,11 +101,11 @@ real	0m44.603s
 user	0m54.004s
 sys		1m28.199s
 [root@centos101 hushi]#
-</pre>
+```
 
 L1CacheMiss2:
 
-<pre>
+```shell
 [root@centos101 hushi]# time java L1CacheMiss2
 starting....
 0
@@ -115,13 +115,13 @@ real	0m18.819s
 user	0m23.566s
 sys		1m26.321s
 [root@centos101 hushi]#
-</pre>
+```
 
 注意这两个值
-<pre>
+```shell
 duration = 28704662032
 duration = 3003702192
-</pre>
+```
 
 第二个访问的消耗的时间将近比第一个少了一个数量级。why ?
 
@@ -146,19 +146,29 @@ L1 级 cache 是分开的，dcache 数据缓存，icache 指令缓存。
 下面我们来验证我们的上面程序为什么会出现运行时间相差一个数量级。
 首先我们介绍一个 Linux 下军工级别的监控工具 **perf**。
 
-Perf 是用来进行软件性能分析的工具。通过它，应用程序可以利用 PMU，tracepoint 和内核中的特殊计数器来进行性能统计。它不但可以分析指定应用程序的性能问题 (per thread)，也可以用来分析内核的性能问题，当然也可以同时分析应用代码和内核，从而全面理解应用程序中的性能瓶颈。
+Perf 是用来进行软件性能分析的工具。通过它，应用程序可以利用 PMU，tracepoint 和内核中的特殊计数器来进行性能统计。
+它不但可以分析指定应用程序的性能问题 (per thread)，也可以用来分析内核的性能问题，当然也可以同时分析应用代码和内核，
+从而全面理解应用程序中的性能瓶颈。
 
-最初的时候，它叫做 Performance counter，在 2.6.31 中第一次亮相。此后他成为内核开发最为活跃的一个领域。在 2.6.32 中它正式改名为 Performance Event，因为 perf 已不再仅仅作为 PMU 的抽象，而是能够处理所有的性能相关的事件。使用 perf，您可以分析程序运行期间发生的硬件事件，比如 instructions retired ，processor clock cycles 等；您也可以分析软件事件，比如 Page Fault 和进程切换。
+最初的时候，它叫做 Performance counter，在 2.6.31 中第一次亮相。此后他成为内核开发最为活跃的一个领域。
+在 2.6.32 中它正式改名为 Performance Event，因为 perf 已不再仅仅作为 PMU 的抽象，
+而是能够处理所有的性能相关的事件。使用 perf，您可以分析程序运行期间发生的硬件事件，
+比如 instructions retired ，processor clock cycles 等；您也可以分析软件事件，比如 Page Fault 和进程切换。
 
-这使得 Perf 拥有了众多的性能分析能力，举例来说，使用 Perf 可以计算每个时钟周期内的指令数，称为 IPC，IPC 偏低表明代码没有很好地利用 CPU。Perf 还可以对程序进行函数级别的采样，从而了解程序的性能瓶颈究竟在哪里等等。Perf 还可以替代 strace，可以添加动态内核 probe 点，还可以做 benchmark 衡量调度器的好坏。。。
+这使得 Perf 拥有了众多的性能分析能力，举例来说，使用 Perf 可以计算每个时钟周期内的指令数，
+称为 IPC，IPC 偏低表明代码没有很好地利用 CPU。Perf 还可以对程序进行函数级别的采样，
+从而了解程序的性能瓶颈究竟在哪里等等。Perf 还可以替代 strace，可以添加动态内核 probe 点，
+还可以做 benchmark 衡量调度器的好坏。。。
 
 我们可以使用
 
-<pre>perf help</pre>
+```shell
+perf help
+```
 
 来查看 perf 的使用帮助，perf 的具体使用自行 google, 这里我们列出来这台机器上支持的 event
 
-<pre>
+```shell
 L1-dcache-loads                                [Hardware cache event]
 L1-dcache-load-misses                          [Hardware cache event]
 L1-dcache-stores                               [Hardware cache event]
@@ -169,13 +179,13 @@ L1-icache-loads                                [Hardware cache event]
 L1-icache-load-misses                          [Hardware cache event]
 L1-icache-prefetches                           [Hardware cache event]
 L1-icache-prefetch-misses                      [Hardware cache event]
-</pre>
+```
 
 这里我只列出来了跟 L1 级 cache 相关 event，其中 dcache 代表 data cache 数据缓存，icache 代表 instruction cache 指令缓存。
 
 ### perf L1-dcache-load-misses 统计验证
 
-<pre>
+```shell
 [root@centos101 hushi]# perf stat -e L1-dcache-load-misses java L1CacheMiss1
 starting....
 0
@@ -189,9 +199,9 @@ duration = 27936761365
       43.200703471 seconds time elapsed
 
 [root@centos101 hushi]#
-</pre>
+```
 
-<pre>
+```shell
 [root@centos101 hushi]# perf stat -e L1-dcache-load-misses java L1CacheMiss2
 starting....
 0
@@ -205,7 +215,7 @@ duration = 3142251198
       20.323997237 seconds time elapsed
 
 [root@centos101 hushi]#
-</pre>
+```
 
 从 L1-dcache-misses 的次数可以看出确实 L1CacheMiss1 要高出不少。
 

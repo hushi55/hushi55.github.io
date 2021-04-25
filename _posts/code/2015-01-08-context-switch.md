@@ -11,7 +11,7 @@ tags: [linux, vmstat, context switch]
 ## 实验
 我们来看下面这段代码：
 
-<pre>
+```java
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 
@@ -67,11 +67,11 @@ public final class ContextSwitchTest {
 		}
 	}
 }
-</pre>
+```
 
 我们先来看看系统的负载
 
-<pre class="nowordwrap">
+```shell
 [root@centos101 ~]# vmstat -w 1
 procs -------------------memory------------------ ---swap-- -----io---- --system-- -----cpu-------
  r  b       swpd       free       buff      cache   si   so    bi    bo   in   cs  us sy  id wa st
@@ -83,17 +83,17 @@ procs -------------------memory------------------ ---swap-- -----io---- --system
  1  0     646344    1292596    2660988   44481308    0    0     0    76 1766 2681   1  0  99  0  0
  2  0     646344    1292844    2660988   44481308    0    0     0     4 1324 1774   0  0 100  0  0
  1  0     646344    1293620    2660988   44481308    0    0     0    76 1560 2171   0  0  99  0  0
-</pre>
+```
 
 现在我们运行上面的程序：
 
-<pre>
+```shell
 [root@centos101 hushi]# java ContextSwitchTest
-</pre>
+```
 
 现在的系统负载为：
 
-<pre class="nowordwrap">
+```shell
 [root@centos101 ~]# vmstat -w 1
 procs -------------------memory------------------ ---swap-- -----io---- --system-- -----cpu-------
  r  b       swpd       free       buff      cache   si   so    bi    bo   in   cs  us sy  id wa st
@@ -105,12 +105,12 @@ procs -------------------memory------------------ ---swap-- -----io---- --system
  2  0     646316    1431908    2663212   44338940    0    0     0     0 2577 241335   1  2  97  0  0
  3  0     646316    1431624    2663212   44338944    0    0     0     4 3114 279214   2  1  97  0  0
  4  0     646316    1431436    2663212   44338944    0    0     0     0 2550 278861   2  1  97  0  0
-</pre>
+```
 
 请注意 vmstat 结果中的 cs 列，它的意思就是系统的 context switch 的次数。从两次数据可以看出 context switch 从 2000 左右激增到 200000 左右，增加了 100 倍。
 运行后的结果为：
 
-<pre>
+```shell
 [root@centos101 hushi]# java ContextSwitchTest
 parks: 960929
 parks: 960085
@@ -122,11 +122,11 @@ parks: 875644
 parks: 876710
 Average time: 7738ns
 [root@centos101 hushi]#
-</pre>
+```
 
 现在我们绑定这个程序到某一个 cpu 上，看看执行结果会是怎么样的。
 
-<pre>
+```shell
 [root@centos101 hushi]# taskset -c 2 java ContextSwitchTest
 parks: 988759
 parks: 1000000
@@ -138,11 +138,11 @@ parks: 1000001
 parks: 986989
 Average time: 2634ns
 [root@centos101 hushi]#
-</pre>
+```
 
 vmstat 监控到的数据为：
 
-<pre class="nowordwrap">
+```shell
 [root@centos101 ~]# vmstat -w 1
 procs -------------------memory------------------ ---swap-- -----io---- --system-- -----cpu-------
  r  b       swpd       free       buff      cache   si   so    bi    bo   in   cs  us sy  id wa st
@@ -153,7 +153,7 @@ procs -------------------memory------------------ ---swap-- -----io---- --system
  2  0     646408    1337472    2663304   44347108    0    0     0     4 2988 392845   1  3  97  0  0
  3  0     646408    1337212    2663304   44347108    0    0     0     4 3096 396890   1  2  97  0  0
  2  0     646408    1337384    2663304   44347108    0    0     0     4 2963 396925   1  3  97  0  0
-</pre>
+```
 
 ## 什么是 context switch
 context 就是我们常说的上线文，switch 必然设计到 2 个 context。过程如下图：
@@ -189,8 +189,6 @@ context 就是我们常说的上线文，switch 必然设计到 2 个 context。
 
 - 直接消耗包括: CPU寄存器需要保存和加载，系统调度器的代码需要执行，TLB实例需要重新加载，CPU 的pipeline需要刷掉
 - 间接消耗指的是多核的cache之间得共享数据，间接消耗对于程序的影响要看线程工作区操作数据的大小
-
-
 
 
 

@@ -24,54 +24,54 @@ Vector 这种工作变得更加简单高效。
 
 rpm 安装的命令如下：
 
-<pre>
+```shell
 yum install pcp
 # RHEL 7 / Fedora
 systemctl start pmcd
 systemctl start pmlogger
-</pre>
+```
 
 源码安装方式的操作如下：
 
 首先装 gcc，make 等工具：
-<pre>
+
+```shell
 yum groupinstall "Development Tools"
-</pre>
+```
 
 其次安装 perl 的 dev 包
 
-<pre>
-yum install -y perl-devel 
-</pre>
+```shell
+yum install -y perl-devel
+```
 
 最后我们安装 pcp 的依赖包：
 
-<pre>
+```shell
 ## install yum-builddep
 yum provides yum-builddep
 yum install -y yum-utils-1.1.31-29.el7.noarch
 
 yum-builddep -y pcp
-</pre>
-
+```
 
 安装所有的依赖后，我们下载最新的 [pcp 的源码](https://bintray.com/pcp/source)，解压后到相应的目录：
 
-<pre>
+```shell
 ## add user
 groupadd -r pcp && useradd -c "Performance Co-Pilot" -g pcp -d /var/lib/pcp -M -r -s /usr/sbin/nologin pcp
 
 ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --with-webapi
 
 make -j8 && make install
-</pre>
+```
 
 安装成功后，我们启动 pmcd 后台进程
 
-<pre>
+```shell
 systemctl start pmcd
 systemctl start pmlogger
-</pre>
+```
 
 ## vector 
 
@@ -80,40 +80,40 @@ systemctl start pmlogger
 
 安装 [bower](http://bower.io/#install-bower)，我们下面的安装会使用到 bower，使用下面的命令安装
 
-<pre>
+```shell
 npm install -g bower
-</pre>
+```
 
 使用 npm 安装后，在 nodejs bin 目录下将会多出来 bower 文件。
 
 我们还需要安装 gulp,我们可以使用下面的命令安装
 
-<pre>
+```shell
 npm install --global gulp
 npm install --save-dev gulp
-</pre>
+```
 
 最后我们下载最新稳定的 vector 并且解压，cd 到 vector 的目录下执行如下命令：
 
-<pre>
+```shell
 npm install
 bower install --allow-root
 gulp build
-</pre>
+```
 
 注意由于国内网络的原因，可能会是吧，失败后多执行几次，直到成功为止。安装成功后，我们就可以启动 vector 了
 
-<pre>
+```shell
 gulp serve
-</pre>
+```
 
 这么启动的默认端口是 3000。
 
 启动 vector 后我们就可以启动，pmwebd 进程了，我们使用如下命令启动
 
-<pre>
+```shell
 /usr/libexec/pcp/bin/pmwebd -R dist -p 44323
-</pre>
+```
 
 启动完成后，我们就可以在浏览其中访问 vector 了。那么将看到如下所有的图
 
@@ -157,16 +157,15 @@ vector 还处于开发中，netflix 还将添加一些新特性,我们可以关�
 ## 错误
 关于安装过程中出现的一些错误
 
-<pre>
+```shell
 ExtUtils::MM_Unix::tool_xsubpp : Can't find xsubpp at /usr/local/share/perl5/ExtUtils/MM_Unix.pm line 3595.
-</pre>
+```
 
 可以安装 
 
-<pre>
+```shell
 yum install -y perl-devel 
-</pre>
-
+```
 
 ## 参考
 - [perl error](http://stackoverflow.com/questions/27747568/getting-cant-find-xsubpp-at-usr-lib-perl5-5-10-0-extutils-mm-unix-pm-error-w)

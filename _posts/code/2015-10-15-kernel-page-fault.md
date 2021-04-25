@@ -7,7 +7,7 @@ tags: [linux, kernel]
 ---
 关于 linux 内存管理的一些知识点。下面是缺页的各种情况
 
-<pre class="nowordwrap">
+```shell
 /*
  * Different kinds of faults, as returned by handle_mm_fault().
  * Used to decide whether a process gets delivered SIGBUS or
@@ -34,14 +34,15 @@ tags: [linux, kernel]
 #define VM_FAULT_ERROR  (VM_FAULT_OOM | VM_FAULT_SIGBUS | VM_FAULT_SIGSEGV | \
                          VM_FAULT_HWPOISON | VM_FAULT_HWPOISON_LARGE | \
                          VM_FAULT_FALLBACK)
-</pre>
+
+```
 
 - VM_FAULT_MINOR 表明该页数据已经在内存中了，这种情况不会阻塞进程
 - VM_FAULT_MAJOR 表明数据需要从块设备中读取，这种情况会阻塞进程
 
 提供一个 systemtap 脚本
 
-<pre>
+```shell
 [root@docker221 memory]# pwd
 /usr/share/systemtap-2.9-3823/share/doc/systemtap/examples/memory
 [root@docker221 memory]# cat pfaults.stp 
@@ -78,9 +79,7 @@ probe vm.pagefault.return {
   delete fault_address[tid()]
   delete fault_access[tid()]
 }
-</pre>
-
-
+```
 
 ## 参考
 
