@@ -6,11 +6,12 @@ category: code
 tags: [linux, Golang]
 ---
 
-由于 gorotine 是协程，那么当单个 goroutine 运行结束后，调度器是如何调度下一个 goroutine 的呢？由于 golang 是运行在用户态的，那么如果当前这个 goroutine 不主动调用 schedule()，那么调度器就没有机会调度下一个 goroutine 了。
+由于 gorotine 是协程，那么当单个 goroutine 运行结束后，调度器是如何调度下一个 goroutine 的呢？
+由于 golang 是运行在用户态的，那么如果当前这个 goroutine 不主动调用 schedule()，
+那么调度器就没有机会调度下一个 goroutine 了。
 这一节我们就来看看单个 goroutine 结束后是如何到调度的。即如何主动调用 schedule() 的
 
-<pre class="nowordwrap">
-
+```go
 /usr/local/go/src/runtime/proc.go:2770
 
 ...
@@ -23,47 +24,50 @@ gostartcallfn(&newg.sched, fn)
 
 ...
 	
-</pre>
+```
 
-在上一节中咱们讲解了 `go` 关键字是如何产生一个 goroutine 的，`go` 关键字知识编译器的语法糖，最终会通过编译器和连接器调用 `newproc` ，而后调用 `newproc1` 方法，这个文件 2770 行，
+在上一节中咱们讲解了 `go` 关键字是如何产生一个 goroutine 的，`go` 关键字知识编译器的语法糖，
+最终会通过编译器和连接器调用 `newproc` ，而后调用 `newproc1` 方法，这个文件 2770 行，
 `newg.sched.pc` 被赋值成了 `funcPC(goexit) + sys.PCQuantum`。
 
 
 随后调用了 `gostartcallfn` 在这个函数中会调用到 `gostartcall` 我们来看看这个函数到
 
-<pre class="nowordwrap">
+```go
 // adjust Gobuf as it if executed a call to fn with context ctxt
 // and then did an immediate gosave.
 func gostartcall(buf *gobuf, fn, ctxt unsafe.Pointer) {
-	sp := buf.sp
-	if sys.RegSize > sys.PtrSize {
-		sp -= sys.PtrSize
-		*(*uintptr)(unsafe.Pointer(sp)) = 0
-	}
-	sp -= sys.PtrSize
-	*(*uintptr)(unsafe.Pointer(sp)) = buf.pc
-	buf.sp = sp
-	buf.pc = uintptr(fn)
-	buf.ctxt = ctxt
+  sp := buf.sp
+  if sys.RegSize > sys.PtrSize {
+    sp -= sys.PtrSize
+    *(*uintptr)(unsafe.Pointer(sp)) = 0
+  }
+  sp -= sys.PtrSize
+  *(*uintptr)(unsafe.Pointer(sp)) = buf.pc
+  buf.sp = sp
+  buf.pc = uintptr(fn)
+  buf.ctxt = ctxt
 }
-</pre>
+```
 
 咱们对照下面的内存布局来看看
 
 ![](/images/blog/golang/scheduled/new_goroutine.png)
 
-在调用`gostartcall`之前，`buf.pc` 的值是`goexit`，然后将`buf.sp`向低地址移动一个指针大小的位置，将`buf.pc` 的 值赋给该地址，也就是说 `gostartcall` 就是将 `goexit` 的地址压入了函数调用本来是 `PC` 的内存位置，这样就会导致当 goroutine 运行结束后 `return` 关键字将调用 `goexit`，从这里我们也可以推断当调度到执行 goroutine 到函数时，一定不会使用  `call` 指令，而只能使用 `jmp` 指令，这样才能最后执行 `goexit`，应为当前的内存布局已经是符合函数的调用了。
+在调用`gostartcall`之前，`buf.pc` 的值是`goexit`，然后将`buf.sp`向低地址移动一个指针大小的位置，
+将`buf.pc` 的 值赋给该地址，也就是说 `gostartcall` 就是将 `goexit` 的地址压入了函数调用本来是 `PC` 的内存位置，
+这样就会导致当 goroutine 运行结束后 `return` 关键字将调用 `goexit`，
+从这里我们也可以推断当调度到执行 goroutine 到函数时，一定不会使用  `call` 指令，
+而只能使用 `jmp` 指令，这样才能最后执行 `goexit`，应为当前的内存布局已经是符合函数的调用了。
 
 ![](/images/blog/golang/scheduled/goroutine_goexit.png)
-
 
 ## systemcall，mcall 的作用
 
 ### 为什么要有 systemcall，mcall
 从前面的分析知道，`m` 对象上有两个 `g` 对象，其中一个为 `g` 另外一个 `g0`。其中 `g0` 对象的栈作为了 `m` 对象的底层操作系统的线程执行栈
 
-<pre class="nowordwrap">
-
+```go
 /usr/local/go/src/runtime/proc.go:1572
 
 ...
@@ -86,12 +90,11 @@ rtsigprocmask(_SIG_SETMASK, &oset, nil, int32(unsafe.Sizeof(oset)))
 
 ...
 
-</pre>
+```
 
 其中
 
-<pre class="nowordwrap">
-
+```go
 /usr/local/go/src/runtime/os_linux.go:128
 
 cloneFlags = _CLONE_VM | /* share memory */
@@ -99,10 +102,11 @@ cloneFlags = _CLONE_VM | /* share memory */
 		_CLONE_FILES | /* share fd table */
 		_CLONE_SIGHAND | /* share sig handler table */
 		_CLONE_THREAD /* revisit - okay for now */
+```
 
-</pre>
-
-这样可以保证 `m` 对象在系统线程运行时使用的是 `g0` 栈，当运行 goroutine 时使用的 `g` 栈，这样可以保证管理 goroutine 时不会和 goroutine 的函数栈帧混在一起，因为这样可以保证不用在系统状态和 goroutine 状态各自是干净的
+这样可以保证 `m` 对象在系统线程运行时使用的是 `g0` 栈，当运行 goroutine 时使用的 `g` 栈，
+这样可以保证管理 goroutine 时不会和 goroutine 的函数栈帧混在一起，
+因为这样可以保证不用在系统状态和 goroutine 状态各自是干净的
 
 
 ### systemcall mcall 解释

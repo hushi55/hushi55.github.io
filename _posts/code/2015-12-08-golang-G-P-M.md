@@ -38,7 +38,7 @@ M 通过修改寄存器，将执行栈指向 G 自带栈内存，并在此空间
 上面我们清楚了 Golang 内部是怎么处理 M, P, G 的，这小节我们来看看 G 是怎么来，也就是使用 go 关键字后都发生了什么，
 首相我们会使用一个简单的 go 使用的例子：
 
-<pre class="nowordwrap">
+```go
 // test.go  
 
 package main 
@@ -57,12 +57,11 @@ func main() {
   go add(x, y)
 
 } 
-</pre>
+```
 
 为了演示我们使用了一个非常简单的例子，现在我们来看看编译的代码是什么情况：
 
-
-<pre class="nowordwrap">
+```shell
 $ go build -o test test.go 
 
 $ go tool objdump -s "main\.main" test 
@@ -80,11 +79,11 @@ TEXT main.main(SB) test.go
     test.go:13   CALL runtime.newproc(SB) 
     test.go:14   ADDQ $0x28, SP 
     test.go:14   RET 
-</pre>
+```
 
 中上面的汇编可以看到，会调用 runtime.newproc，函数如下：
 
-<pre class="nowordwrap">
+```go
 // runtime/proc1.go
 
 func newproc(siz int32, fn *funcval) {
@@ -94,7 +93,7 @@ func newproc(siz int32, fn *funcval) {
 		newproc1(fn, (*uint8)(argp), siz, 0, pc)
 	})
 }
-</pre>
+```
 
 我们从汇编代码可以看到入栈了 4 个参数，但是 newproc 函数只有 2 个参数，这是因为使用的了 fn *funcval 将后面的参数都捏一起，组成一个参数。
 我们讲接下上面代码的意思，可以对照下面的内存布局图：

@@ -24,9 +24,7 @@ golang 采用的就是第二种解决方案，将当前这个线程独享给 gor
 
 我们通过 `file.Read()` 这个系统调用来分析。
 
-
-<pre class="nowordwrap">
-
+```go
 /usr/local/go/src/os/file.go:97
 
 // Read reads up to len(b) bytes from the File.
@@ -45,12 +43,11 @@ func (f *File) Read(b []byte) (n int, err error) {
 	}
 	return n, err
 }
-</pre>
+```
 
 在 f.read(b) 最终会调用到
 
-<pre class="nowordwrap">
-
+```go
 /usr/local/go/src/syscall/zsyscall_linux_amd64.go:776
 
 func read(fd int, p []byte) (n int, err error) {
@@ -67,12 +64,9 @@ func read(fd int, p []byte) (n int, err error) {
 	}
 	return
 }
-</pre>
+```
 
-
-
-<pre class="nowordwrap">
-
+```cgo
 /usr/local/go/src/syscall/asm_linux_amd64.s
 
 // func Syscall(trap int64, a1, a2, a3 int64) (r1, r2, err int64);
@@ -104,8 +98,7 @@ ok:
 	MOVQ	$0, err+48(FP)
 	CALL	runtime·exitsyscall(SB)
 	RET
-
-</pre>
+```
 
 可以清楚看到最中的系统调用会在：
 
@@ -114,9 +107,7 @@ ok:
 
 我们可以着重分析下，这两函数的主要干了啥事
 
-
-<pre class="nowordwrap">
-
+```go
 /usr/local/go/src/runtime/proc.go:2310
 
 func reentersyscall(pc, sp uintptr) {
@@ -180,12 +171,9 @@ func reentersyscall(pc, sp uintptr) {
 	_g_.stackguard0 = stackPreempt
 	_g_.m.locks--
 }
-</pre>
+```
 
-
-
-<pre class="nowordwrap">
-
+```go
 /usr/local/go/src/runtime/proc.go:2461
 
 // The goroutine g exited its system call.
@@ -271,12 +259,11 @@ func exitsyscall(dummy int32) {
 	_g_.throwsplit = false
 }
 
-</pre>
+```
 
-
-<pre class="nowordwrap">
+```go
 func gosave(buf *gobuf)
-</pre>
+```
 
 ## 经典案例分析
 
