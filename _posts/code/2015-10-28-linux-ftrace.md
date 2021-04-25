@@ -28,11 +28,11 @@ ftrace 的作用是帮助开发人员了解 Linux 内核的运行时行为，以
 
 我们可以通过以下命令来查看本机支持的 tracer：
 
-<pre class="nowordwrap">
+```shell
 [root@docker221 tracing]# cat /sys/kernel/debug/tracing/available_tracers 
 blk function_graph wakeup_rt wakeup function nop
 [root@docker221 tracing]# 
-</pre>
+```
 
 ## linux ftrace 架构和设计
 ftrace 的整体架构如下图：
@@ -47,24 +47,23 @@ Framework 利用 debugfs 系统在 /debugfs 下建立 tracing 目录，并提供
 Ftrace 采用 GCC 的 profile 特性在所有内核函数的开始部分加入一段 stub 代码，ftrace 重载这段代码来实现 trace 功能。
 
 gcc 的 -pg 选项将在每个函数入口处加入对 mcount 的调用代码。比如下面的 C 代码。
-
-<pre class="nowordwrap">
+```cgo
 //test.c 
 void foo(void) 
 { 
   printf(" foo "); 
 }
-</pre>
+```
 
 用 gcc 编译：
 
-<pre class="nowordwrap">
+```shell
 gcc – S test.c
-</pre>
+```
 
 反汇编如下：
 
-<pre class="nowordwrap">
+```shell
 _foo: 
         pushl   %ebp 
         movl    %esp, %ebp 
@@ -73,17 +72,18 @@ _foo:
         call    _printf 
         leave 
         ret
-</pre>
+```
 
 再加入 -gp 选项编译：
 
-<pre class="nowordwrap">
+```shell
 gcc – pg – S test.c
-</pre>
+
+```
 
 得到的汇编如下：
 
-<pre class="nowordwrap">
+```shell
 _foo: 
         pushl   %ebp 
         movl    %esp, %ebp 
@@ -95,7 +95,7 @@ _foo:
         call    _printf 
         leave 
         ret
-</pre>
+```
 
 增加 pg 选项后，gcc 在函数 foo 的入口处加入了对 mcount 的调用：call _mcount 。原本 mcount 由 libc 实现，
 但是我们知道内核不会连接 libc 库，因此 ftrace 编写了自己的 mcount stub 函数，并借此实现 trace 功能。

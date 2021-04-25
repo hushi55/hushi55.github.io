@@ -26,15 +26,15 @@ linux trace 的工具很多，有些已经进入了 kernel，有一些没有，�
 
 Brendan Gregg 建议的学习顺序是：
 
-- 1. ftrace
-- 2. perf_events
-- 3. eBPF
-- 4. SystemTap
-- 5. LTTng
-- 6. ktap
-- 7. dtrace4linux
-- 8. OL DTrace
-- 9. sysdig
+1. ftrace
+2. perf_events
+3. eBPF
+4. SystemTap
+5. LTTng
+6. ktap
+7. dtrace4linux
+8. OL DTrace
+9. sysdig
 
 ## 参考
 

@@ -13,7 +13,7 @@ epoll 的工作模式
 
 下面这副图很能解释这两种方式的区别：
 
-![](http://7tsy8h.com1.z0.glb.clouddn.com/epoll_水平和边缘触发.png)
+![](/images/linux/et_lt.png)
 
 - 0：表示文件描述符未准备就绪
 - 1：表示文件描述符准备就绪

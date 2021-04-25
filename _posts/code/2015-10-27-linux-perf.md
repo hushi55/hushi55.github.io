@@ -33,7 +33,7 @@ counting events 模式的主要命令为 perf stat，sampling events 模式的�
 
 ### Listing Events
 
-<pre class="nowordwrap">
+```shell
 # Listing all currently known events:
 perf list
 
@@ -71,11 +71,11 @@ List of pre-defined events (to be used in -e):
   ext4:ext4_drop_inode                               [Tracepoint event]
   ext4:ext4_mark_inode_dirty                         [Tracepoint event]
   ... ...
-</pre>
+```
 
 可以看到 perf 可以的跟踪的事件的类型很多，我们可以使用下面的命令来统计下情况：
 
-<pre class="nowordwrap">
+```shell
 [root@docker221 ~]# perf list | awk -F: '/Tracepoint event/ { lib[$1]++ } END {
     for (l in lib) { printf "  %-16s %d\n", l, lib[l] } }' | sort | column
     block          19	    napi           1	    skb            3
@@ -94,7 +94,7 @@ List of pre-defined events (to be used in -e):
     migrate        2	    scsi           5
     module         5	    signal         2
 [root@docker221 ~]#
-</pre>
+```
 
 各种类型中包括：
 
@@ -112,7 +112,7 @@ List of pre-defined events (to be used in -e):
 
 ### Counting Events
 
-<pre class="nowordwrap">
+```shell
 # CPU counter statistics for the specified command:
 perf stat command
 
@@ -160,11 +160,11 @@ perf stat -e 'block:*' -a sleep 10
 
 # Show system calls by process, refreshing every 2 seconds:
 perf top -e raw_syscalls:sys_enter -ns comm
-</pre>
+```
 
 ### Profiling
 
-<pre class="nowordwrap">
+```shell
 # Sample on-CPU functions for the specified command, at 99 Hertz:
 perf record -F 99 command
 
@@ -206,11 +206,11 @@ perf record -e cycles:p -a -- sleep 5
 
 # Perform branch tracing (needs HW support), for 1 second:
 perf record -b -a sleep 1
-</pre>
+```
 
 ### Static Tracing
 
-<pre class="nowordwrap">
+```shell
 # Trace new processes, until Ctrl-C:
 perf record -e sched:sched_process_exec -a
 
@@ -261,11 +261,11 @@ perf record -e 'ext4:*' -o /tmp/perf.data -a
 
 # Trace kswapd wakeup events, until Ctrl-C:
 perf record -e vmscan:mm_vmscan_wakeup_kswapd -ag
-</pre>
+```
 
 ### Dynamic Tracing
 
-<pre class="nowordwrap">
+```shell
 # Add a tracepoint for the kernel tcp_sendmsg() function entry ("--add" is optional):
 perf probe --add tcp_sendmsg
 
@@ -325,11 +325,11 @@ perf probe -x /lib64/libc.so.6 malloc
 
 # List currently available dynamic probes:
 perf probe -l
-</pre>
+```
 
 ### Reporting
 
-<pre class="nowordwrap">
+```shell
 # Show perf.data in an ncurses browser (TUI) if possible:
 perf report
 
@@ -350,7 +350,7 @@ perf script -D
 
 # Disassemble and annotate instructions with percentages (needs some debuginfo):
 perf annotate --stdio
-</pre>
+```
 
 ## perf 案例研究
 案例可以参考我之前的博客：
