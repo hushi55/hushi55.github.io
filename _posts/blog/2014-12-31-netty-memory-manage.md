@@ -79,8 +79,8 @@ chunk 使用一个完全二叉树来管理，数组的 0 index 没有使用，de
 
 树的搜索算法，当申请内存是从树的根节点开始，
 
-<pre>
-	/**
+```java
+    /**
      * Algorithm to allocate an index in memoryMap when we query for a free node
      * at depth d
      *
@@ -109,7 +109,7 @@ chunk 使用一个完全二叉树来管理，数组的 0 index 没有使用，de
         updateParentsAlloc(id);
         return id;
     }
-</pre>
+```
 
 ### subpage 的管理
 若是申请的内存小于 pageSize，netty 将一个 page 分割为多个 subpage 来管理，每个 subpage 的大小是一样的。
