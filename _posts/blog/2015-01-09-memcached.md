@@ -34,19 +34,19 @@ Slab 的整体视图如下：
 ## memcached 运维
 memcached 有个名为 stats 的命令，使用它可以获得各种各样的信息。 执行命令的方法很多，用 telnet 最为简单：
 
-<pre>
+```shell
 telnet localhost 11211
-</pre>
+```
 
 可以使用的命令包括：
 
-<pre>
+```shell
 stats
 stats settings
 stats items
 stats sizes
 stats slabs
-</pre>
+```
 
 stats 命令中的统计项解释：
 
@@ -59,7 +59,7 @@ stats slabs 中的统计项解释：
 ### memcached-tool
 我们监控 memcached，可能使用的最多的还是 memcached-tool 工具，MySQL 安装下就有提供该工具，可以[戳这里](http://dev.mysql.com/doc/refman/5.0/en/ha-memcached-stats-memcached-tool.html)。我们可以看看这个工具的使用：
 
-<pre class="nowordwrap">
+```shell
 [root@centos101 hushi]# ./memcached-tool
 Usage: memcached-tool <host[:port] | /path/to/socket> [mode]
 
@@ -75,9 +75,9 @@ As of 1.4 it is still the only command which will lock your memcached instance f
 If you have many millions of stored items, it can become unresponsive for several minutes.
 Run this at your own risk. It is roadmapped to either make this feature optional
 or at least speed it up.
-</pre>
+```
 
-<pre class="nowordwrap">
+```shell
 [root@centos101 hushi]# ./memcached-tool 127.0.0.1
   # Item_Size   Max_age   Pages   Count   Full?  Evicted Evict_Time  OOM
   1      96B  12032678s       3    4200      no        0        0    0
@@ -113,7 +113,7 @@ or at least speed it up.
  31    80.9K         0s       1       0      no        0        0    0
  38   385.6K         0s       1       0      no        0        0    0
 [root@centos101 hushi]#
-</pre>
+```
 
 各列的解释如下：
 
@@ -130,8 +130,8 @@ or at least speed it up.
 ### memcached 清空缓存
 我们要清空 memcached 的缓存时，不用重启服务，可以使用下面的命令：
 
-<pre>
+```shell
 flush_all
-</pre>
+```
 
 [-10]:    http://hushi55.github.io/  "-10"

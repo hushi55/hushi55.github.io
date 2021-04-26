@@ -34,8 +34,8 @@ org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient
 
 我们可以看到 AbstractJavaSamplerClient 覆盖下面的这些方法。
 
-<pre>
-  /**
+```java
+   /**
 	* lable 属性将能显示在 jmeter 面板上
 	*/
   private static String label = "im.test";
@@ -59,13 +59,13 @@ org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient
     * JMeter 日志记录
     */
   protected Logger getLogger();
-</pre>
+```
 
 完成我们自己的业务操作后，可以将其 export 为一个 jar 文件，我们将其放置在
 
-<pre>
+```shell
 apache-jmeter-2.11\lib\ext
-</pre>
+```
 
 目录下，打开 jmeter 我们能看到：
 
@@ -82,40 +82,40 @@ jmeter 做性能测试时候由于是 jvm 上的应用，那么这个就限制�
 首先我们修改 slaver 的配置，找到如下文件
 
 linux：
-<pre>
+```shell
 apache-jmeter-2.9/bin/jmeter-server
-</pre>
+```
 
 windows：
-<pre>
+```shell
 apache-jmeter-2.9/bin/jmeter-server.bat
-</pre>
+```
 
 修改如下：
 
-<pre>
+```shell
 # One way to fix this is to define RMI_HOST_DEF below
 #RMI_HOST_DEF=-Djava.rmi.server.hostname=xxx.xxx.xxx.xxx
 RMI_HOST_DEF=-Djava.rmi.server.hostname=192.168.1.237
 
 ${DIRNAME}/jmeter ${RMI_HOST_DEF} -Dserver_port=${SERVER_PORT:-1099} -s -j jmeter-server.log "$@"
-</pre>
+```
 
 其中 SERVER_PORT 后面指定就是端口号，启动 jmeter-server。
 
 在 master 的机器中的
 
-<pre>
+```shell
 apache-jmeter-2.9/bin/jmeter.properties
-</pre>
+```
 
 文件中找到
 
-<pre>
+```shell
 # Remote Hosts - comma delimited
 #remote_hosts=192.168.1.221:1099,192.168.1.102:1099,localhost:1099,192.168.0.22:1099
 remote_hosts=192.168.1.237:1099,192.168.1.237:1097,192.168.1.238:1099,192.168.1.238:1097
-</pre>
+```
 
 添加上一步的机器 ip 和 端口，完成以上步骤我们就可以在 master 上控制上面填写的 ip:port 对用的机器了进行 jmeter 分布式测试了。
 
@@ -130,11 +130,11 @@ remote_hosts=192.168.1.237:1099,192.168.1.237:1097,192.168.1.238:1099,192.168.1.
 
 1.在本地磁盘下新建一个文本。比如：F:\test.txt 文件的内容如下：
 
-<pre>
+```shell
 user,passwd
 user1,passwd1
 user2,passwd2
-</pre>
+```
 
 2.右键点击 jmeter 中需要参数化的某个请求，选择添加——配置原件——CSV Data Set Config，会添加一个CSV Data Set Config，需要设置相关的一些内容，具体如下：
 

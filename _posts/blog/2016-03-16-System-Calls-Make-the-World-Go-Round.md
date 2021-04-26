@@ -48,7 +48,7 @@ Below is the code for our program, pid, which simply retrieves its process id vi
 
 `下面的代码展示了我们的程序简单的通过 getpid(2) 获取 pid。`
 
-```
+```cgo
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -128,7 +128,7 @@ This syscall design has far-reaching consequences. Let’s start with the incred
 a tool you can use to spy on system calls made by Linux processes (in Macs, see dtruss(1m) and the amazing dtrace; 
 in Windows, see sysinternals). Here’s strace on pid:
 
-```
+```shell
 ~/code/x86-os$ strace ./pid
 
 execve("./pid", ["./pid"], [/* 20 vars */]) = 0
@@ -158,7 +158,7 @@ strace can start a new process and also attach to an already running one.
 You can learn a lot by looking at the syscalls made by different programs. 
 For example, what does the sshd daemon do all day?
 
-```
+```shell
 ~/code/x86-os$ ps ax | grep sshd
 12218 ?        Ss     0:00 /usr/sbin/sshd -D
 
@@ -196,7 +196,7 @@ If you have a process that appears stuck, you can strace it and see what it migh
 When some app is quitting unexpectedly without a proper error message, check if a syscall failure explains it. 
 You can also use filters, time each call, and so so:
 
-```
+```shell
 ~/code/x86-os$ strace -T -e trace=recv curl -silent www.google.com. > /dev/null
 
 recv(3, "HTTP/1.1 200 OK\r\nDate: Wed, 05 N"..., 16384, 0) = 4164 <0.000007>

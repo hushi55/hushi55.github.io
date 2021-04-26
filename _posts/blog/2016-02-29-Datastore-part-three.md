@@ -37,7 +37,7 @@ The example is in Python:
 > 我们来看看实际中 schemaless 的触发器。下面的代码简单的展示了我们如何异步处理账单（大写代表 schemaless 中的 column name）。
 这个例子使用的 python 代码：
 
-```  python
+```python
 # We instantiate a client for talking with the Schemaless instance.
 schemaless_client = SchemalessClient(datastore='mezzanine')
 

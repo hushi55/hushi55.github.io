@@ -72,16 +72,16 @@ We evaluated three IDL based encoding protocols and seven non-IDL based encoding
 
 | | Encoding Protocol | Schema-based (IDL)
 |:---|:---|:---:
-| 1		| Thrift 	| Yes
+| 1		| Thrift 	        | Yes
 | 2 	| Protocol Buffers 	| Yes
-| 3 	| Avro 	| Yes
-| 4 	| JSON 	| No
-| 5 	| UJSON 	| No
-| 6 	| CBOR 	| No
-| 7 	| BSON 	| No
-| 8 	| MessagePack 	| No
-| 9 	| Marshal 	| No
-| 10 | Pickle¹ 	| No
+| 3 	| Avro 	            | Yes
+| 4 	| JSON 	            | No
+| 5 	| UJSON 	        | No
+| 6 	| CBOR 	            | No
+| 7 	| BSON 	            | No
+| 8 	| MessagePack 	    | No
+| 9 	| Marshal 	        | No
+| 10    | Pickle¹ 	        | No
 
 For compression, we put three lossless and widely accepted libraries to the test:
 
