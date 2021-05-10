@@ -6,9 +6,7 @@ category: code
 tags: [linux, Golang]
 ---
 
-
-<pre class="nowordwrap">
-
+```cgo
 /usr/local/go/src/runtime/runtime1.go:387
 
 ...
@@ -45,9 +43,9 @@ func setTraceback(level string) {
 
 	atomic.Store(&traceback_cache, t)
 }
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // gotraceback returns the current traceback settings.
 //
 // If level is 0, suppress all tracebacks.
@@ -70,7 +68,7 @@ func gotraceback() (level int32, all, crash bool) {
 	level = int32(t >> tracebackShift)
 	return
 }
-</pre>
+```
 
 - 增加环境变量 GOTRACEBACK=crash
 - 修改 core 文件保存的路径

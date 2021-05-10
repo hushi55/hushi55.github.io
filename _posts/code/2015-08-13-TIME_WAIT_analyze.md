@@ -9,7 +9,7 @@ tags: [TCP, tcpdump, wireshark]
 线上的服务器出现了问题，表现为一台应用服务器当请求另外一台应用服务器的服务时，出现 read time out 的异常。
 当运维尝试了重启应用等操作后，一分钟后症状依旧。我接手问题时首先在出现异常的服务器上使用
 
-<pre class="nowordwrap">
+```shell
 [root@docker221 ~]# ss -s
 Total: 543 (kernel 1323)
 TCP:   197 (estab 165, closed 7, orphaned 0, synrecv 0, timewait 3/0), ports 0
@@ -23,13 +23,13 @@ INET	  199       30        169
 FRAG	  0         0         0        
 
 [root@docker221 ~]# 
-</pre>
+```
 
 其中 timewait 状态的统计达到了 5-6W，这个状态这么多，不正常，初步怀疑是这个点产生。通过
 
-<pre>
+```shell
 [root@docker221 ~]# netstat -naltp | grep TIME_WAIT
-</pre>
+```
 
 命令查看 TIME_WAIT 状态链接详细信息，知道了这些状态信息的产生是 nginx 服务器和应用服务器之间的链接。
 
@@ -82,7 +82,7 @@ FRAG	  0         0         0
 知道了这个以后，根据上面抓包的结果我们，知道这个问题应该从 nginx 这一端下手解决，由于现在的请求中 http connection 头是 close，我们应该将其改为
 keep-alive，通过查阅 nginx 的文档，我们知道只需要添加下面的配置
 
-<pre>
+```shell
 server {
     ...
 
@@ -93,7 +93,7 @@ server {
         ...
     }
 }
-</pre>
+```
 
 当我们修改 nginx 配置 reload 后，我们再次抓包
 
@@ -120,14 +120,14 @@ server {
 
 这个指令是开启保持一个 keep-alive 链接的个数。默认是没有值。所有我们应该在配置添加形如以下的配置
 
-<pre>
+```shell
 upstream memcached_backend {
     server 127.0.0.1:11211;
     server 10.0.0.2:11211;
 
     keepalive 32;
 }
-</pre> 
+```
 
 当添加上面的配置后，我们通过 tcpdump 抓包后确认：
 
@@ -141,9 +141,9 @@ request 包的 seq 号是接上这个包的 ACK 号，如图：
 
 可以看到序列号为 10 的 ACK 号是 623，序列号 11 的包:
 
-<pre class="nowordwrap">
+```text
 11	2015-08-13 12:29:13.633910	192.168.227.57	192.168.227.72	TCP	54	33179→8002 [ACK] Seq=623 Ack=249 Win=35 Len=0
-</pre>
+```
 
 序列号是 623，但是 Len=0，意味着下一个包的 seq 号应该还是 623：
 

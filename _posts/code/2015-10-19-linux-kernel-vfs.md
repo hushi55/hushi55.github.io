@@ -38,7 +38,7 @@ tags: [linux, kernel, vfs]
 
 我们可以通过下面的 systemtap 脚本来验证上面的这个图中的信息：
 
-<pre class="nowordwrap">
+```shell
 stap -e '
     probe syscall.read { 
         file = @cast(task_current(), "task_struct")->
@@ -52,7 +52,7 @@ stap -e '
             fd, d_name(dentry), @cast(inode, "inode")->i_size,
             kernel_string(@cast(inode, "inode")->i_sb->s_id)); 
     } '  -c 'cat /etc/passwd > /dev/null'
-</pre>
+```
 
 看完了 vfs 在 linux kernel 中的代码结构，我们来看看 vfs 使用时，kernel 内部都做了些什么操作：
 
@@ -66,7 +66,7 @@ stap -e '
 ## vfs in systemtap
 我们首先来看看 vfs 在 systemtap 中的已经定义的一些别名：
 
-<pre class="nowordwrap">
+```shell
 [root@docker221 tapset]# pwd
 /usr/share/systemtap-2.9-3823/share/systemtap/tapset
 
@@ -97,8 +97,7 @@ probe vfs.writev = kernel.function("vfs_writev")
 probe vfs.writev.return = kernel.function("vfs_writev").return
 probe vfs.open = kernel.function("vfs_open") ?
 probe vfs.open.return = kernel.function("vfs_open").return ?
-</pre>
-
+```
 
 ## 参考
 

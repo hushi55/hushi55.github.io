@@ -12,7 +12,7 @@ tags: [linux, Golang, netlink]
 
 ### linux 中命令可以使用 netlink 代替
 
-<pre class="nowordwrap">
+```shell
 Equivalent to: `ip addr add $addr dev $link`
 Equivalent to: `ip addr del $addr dev $link`
 Equivalent to: `ip addr show`.
@@ -140,7 +140,7 @@ Equivalent to: `ip xfrm state update $state`
 Equivalent to: `ip xfrm policy get { SELECTOR | index INDEX } dir DIR [ctx CTX ] [ mark MARK [ mask MASK ] ] [ ptype PTYPE ]`.
 Equivalent to: `ip xfrm state allocspi`
 Equivalent to: `ip xfrm state get ID [ mark MARK [ mask MASK ] ]`.
-</pre>
+```
 
 从上面可以知道可以互相代替的命令分为了 3 打类
 

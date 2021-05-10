@@ -41,7 +41,7 @@ fn 必需不能有返回值，一般情况下这个由调用 schedule 结束，�
 
 mcall 只能在 g 栈被调用，不能在 g0，gsingal 栈调用
 
-<pre class="nowordwrap">
+```cgo
 // func mcall(fn func(*g))
 // Switch to m->g0's stack, call fn(g).
 // Fn must never return. It should gogo(&g->sched)
@@ -76,9 +76,9 @@ TEXT runtime·mcall(SB), NOSPLIT, $0-8
 	MOVQ	$runtime·badmcall2(SB), AX
 	JMP	AX
 	RET
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // systemstack runs fn on a system stack.
 // If systemstack is called from the per-OS-thread (g0) stack, or
 // if systemstack is called from the signal handling (gsignal) stack,
@@ -98,12 +98,12 @@ TEXT runtime·mcall(SB), NOSPLIT, $0-8
 //
 //go:noescape
 func systemstack(fn func())
-</pre>
+```
 
 systemstack 运行 fn 在系统栈上，如果 systemstack 是在 g0 栈或者 gsignal 栈上，直接调用 fn 函数然后返回。
 否则，systemstack 将切换到 g0 栈上调用 fn 然后切换回来。
 
-<pre class="nowordwrap">
+```cgo
 // func systemstack(fn func())
 TEXT runtime·systemstack(SB), NOSPLIT, $0-8
 	MOVQ	fn+0(FP), DI	// DI = fn
@@ -166,9 +166,9 @@ noswitch:
 	MOVQ	0(DI), DI
 	CALL	DI
 	RET
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // goexit is the return stub at the top of every goroutine call stack.
 // Each goroutine stack is constructed as if goexit called the
 // goroutine's entry point function, so that when the entry point
@@ -180,15 +180,14 @@ noswitch:
 // call on the stack will cause gentraceback to stop walking the stack
 // prematurely and if there are leftover stack barriers it may panic.
 func goexit(neverCallThisFunction)
-
-</pre>
+```
 
 goexit 返回 goroutines 的栈的顶部。每一个 goroutines 栈构造时，会压入栈顶。
 当 goroutines 返回时 goexit 实际上会执行。
 
 goexit 不能直接调用。必需使用  goexit1 代替。
 
-<pre class="nowordwrap">
+```cgo
 // The top-most function running on a goroutine
 // returns to goexit+PCQuantum.
 TEXT runtime·goexit(SB),NOSPLIT,$0-0
@@ -236,9 +235,9 @@ func getcallersp(argp unsafe.Pointer) uintptr
 
 <pre class="nowordwrap">
 func gogo(buf *gobuf)
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // void gogo(Gobuf*)
 // restore state from Gobuf; longjmp
 TEXT runtime·gogo(SB), NOSPLIT, $0-8
@@ -257,14 +256,13 @@ TEXT runtime·gogo(SB), NOSPLIT, $0-8
 	MOVQ	$0, gobuf_bp(BX)
 	MOVQ	gobuf_pc(BX), BX
 	JMP	BX
-
-</pre>
+```
 
 gogo 函数在 m 上切换栈到 g 上，执行函数。 注意这里最后使用到 JMP ,
 那么函数在最后到 return 后 pc 是啥？
 我们可以查看下构造 goroutines 是栈上到布局
 
-<pre class="nowordwrap">
+```cgo
 // Create a new g running fn with siz bytes of arguments.
 // Put it on the queue of g's waiting to run.
 // The compiler turns a go statement into a call to this.
@@ -279,9 +277,9 @@ func newproc(siz int32, fn *funcval) {
 		newproc1(fn, (*uint8)(argp), siz, 0, pc)
 	})
 }
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // Create a new g running fn with narg bytes of arguments starting
 // at argp and returning nret bytes of results.  callerpc is the
 // address of the go statement that created this. The new g is put
@@ -384,9 +382,9 @@ func newproc1(fn *funcval, argp *uint8, narg int32, nret int32, callerpc uintptr
 	}
 	return newg
 }
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // adjust Gobuf as it if executed a call to fn with context ctxt
 // and then did an immediate gosave.
 func gostartcall(buf *gobuf, fn, ctxt unsafe.Pointer) {
@@ -401,14 +399,13 @@ func gostartcall(buf *gobuf, fn, ctxt unsafe.Pointer) {
 	buf.pc = uintptr(fn)
 	buf.ctxt = ctxt
 }
-</pre>
+```
 
-
-<pre class="nowordwrap">
+```cgo
 func gosave(buf *gobuf)
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // Save state of caller into g->sched. Smashes R8, R9.
 TEXT gosave<>(SB),NOSPLIT,$0
 	get_tls(R8)
@@ -421,9 +418,7 @@ TEXT gosave<>(SB),NOSPLIT,$0
 	MOVQ	$0, (g_sched+gobuf_ctxt)(R8)
 	MOVQ	BP, (g_sched+gobuf_bp)(R8)
 	RET
-	
-</pre>
-
+```
 
 ## Goroutine 需要解决的问题
 

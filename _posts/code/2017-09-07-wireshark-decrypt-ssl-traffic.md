@@ -12,21 +12,21 @@ tags: [linux, Golang, netlink]
 
 ### linux 中命令可以使用 netlink 代替
 
-<pre class="nowordwrap">
+```shell
 Failed to watch directory "/sys/fs/cgroup/memory/system.slice": inotify_add_watch /sys/fs/cgroup/memory/system.slice/run-docker-netns-c6d57b04b0f8.mount: no space left on device
-</pre>
+```
 
-<pre class="nowordwrap">
+```shell
 sudo find /proc/*/fd -lname anon_inode:inotify |
    cut -d/ -f3 |
    xargs -I '{}' -- ps --no-headers -o '%p %U %c' -p '{}' |
    uniq -c |
    sort -nr
-</pre>
+```
 
-<pre class="nowordwrap">
+```shell
 sysctl -w fs.inotify.max_user_watches=81920
-</pre>
+```
 
 从上面可以知道可以互相代替的命令分为了 3 打类
 

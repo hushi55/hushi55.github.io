@@ -33,7 +33,7 @@ scsi 层中各个函数的含义:
 ## linux block I/O 在 systemtap 的跟踪 
 熟悉了 linux block 的整体结构和代买的相关细节后，我们使用 systemtap 来验证下。看看几个 systemtap 的脚本
 
-<pre class="nowordwrap">
+```shell
 #!/usr/bin/stap
 
 global req_time%[25000], etimes
@@ -70,11 +70,11 @@ probe timer.s(10), end {
   }
   delete etimes
 }
-</pre>
+```
 
 注意上面脚本中的两个探针，ioblock.request ioblock.end 的原型定义在
 
-<pre class="nowordwrap">
+```shell
 [root@docker221 tapset]# pwd
 /usr/share/systemtap-2.9-3823/share/systemtap/tapset
 
@@ -88,7 +88,7 @@ linux/ioblock.stp: * probe ioblock.end - Fires whenever a block I/O transfer is 
 linux/ioblock.stp:probe ioblock.end = kernel.function("bio_endio")
 linux/ioblock.stp:	name = "ioblock.end"
 
-</pre>
+```
 
 可以看出
 
