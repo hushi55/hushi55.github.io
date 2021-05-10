@@ -13,6 +13,7 @@
   padding: 10px;
   padding-left: 25px;
   white-space:pre;white-space:pre-wrap;word-break:break-all;word-wrap:break-word;
+  background-color:#EDFCED;
 }
 
 .nowordwrap { white-space:pre; word-wrap:normal;}
