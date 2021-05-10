@@ -6,18 +6,18 @@ category: code
 tags: [c, epoll, linux]
 ---
 
-<pre class="nowordwrap">
-#include &lt;netdb.h&gt;
-#include &lt;sys/socket.h&gt;
-#include &lt;sys/epoll.h&gt;
-#include &lt;netinet/in.h&gt;
-#include &lt;arpa/inet.h&gt;
-#include &lt;fcntl.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;errno.h&gt;
+```cgo
+#include <netdb.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
 
 /**
  * 创建并绑定一个socket作为服务器。
@@ -243,9 +243,8 @@ int  main (int argc, char *argv[]) {
     free (events);//释放内存
     close (sfd);   //关闭sfd
     return EXIT_SUCCESS;
-
 }
-</pre>
+```
 
 
 ## 参考

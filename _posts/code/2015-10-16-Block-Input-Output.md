@@ -87,7 +87,6 @@ linux/ioblock.stp:	name = "ioblock.request"
 linux/ioblock.stp: * probe ioblock.end - Fires whenever a block I/O transfer is complete.
 linux/ioblock.stp:probe ioblock.end = kernel.function("bio_endio")
 linux/ioblock.stp:	name = "ioblock.end"
-
 ```
 
 可以看出
