@@ -15,7 +15,7 @@ tags: [linux, kernel, net]
 - [Golang sweep free alloc](https://github.com/golang/proposal/blob/master/design/12800-sweep-free-alloc.md)
 - [Golang Escape Analysis](http://blog.rocana.com/golang-escape-analysis)
 - [Five things that make Go fast](http://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
-- [Go中的连续栈](http://air.googol.im/2014/03/28/contiguous-stacks-in-go.html)
+- [Go中的连续栈](http://air.googol.im/post/contiguous-stacks-in-go/)
 - [A Manual for the Plan 9 assembler](http://plan9.bell-labs.com/sys/doc/asm.html)
 - [vim Golang IDE](http://tonybai.com/2014/11/07/golang-development-environment-for-vim/)
 - [并发 Concurrency 不是并行 Parallelism](http://www.vaikan.com/docs/Concurrency-is-not-Parallelism/#title-slide)
