@@ -10,7 +10,7 @@ tags: [nginx, c, slab, linux]
 
 ![](http://img.blog.csdn.net/20130914221301406?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvUm95YWxBcGV4/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
-<pre>
+```cgo
 typedef struct {
     ngx_shmtx_sh_t    lock;
 
@@ -34,14 +34,15 @@ typedef struct {
     void             *data;
     void             *addr;
 } ngx_slab_pool_t;
-</pre>
+```
 
 ![](http://images.cnitblog.com/blog/573246/201311/07152129-8c007d2689ab4f50aa35486df7993c11.jpg)
 
 解释：
 将一整块内存管理起来，分为小内存管理和大内存管理，其中 slot 数组管理小内存， page 管理大内存。slot 管理小于 pagesize/2 大小的分配，大于 pagesize/2 的都是整个 page 的分配。slot 数组管理一定大小的内存，将一个 page 分为大小一样的 slot 来管理。搞清楚这个算法，看看它的初始化，就能明白：
 
-<pre>
+
+```cgo
 void
 ngx_slab_init(ngx_slab_pool_t *pool)
 {
@@ -109,11 +110,10 @@ ngx_slab_init(ngx_slab_pool_t *pool)
     pool->log_ctx = &pool->zero;
     pool->zero = '\0';
 }
-</pre>
+```
 
 ## 参考
 - [http://www.cnblogs.com/doop-ymc/p/3412572.html](http://www.cnblogs.com/doop-ymc/p/3412572.html)
 - [http://blog.csdn.net/qifengzou/article/details/11678115](http://blog.csdn.net/qifengzou/article/details/11678115)
-- []()
 
 [-10]:    http://hushi55.github.io/  "-10"
