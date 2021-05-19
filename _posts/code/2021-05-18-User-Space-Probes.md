@@ -92,16 +92,11 @@ uprobes 和 uretprobes 当前支持的架构有：
 - s390x
 
 ## Interoperation with Kprobes
+Uprobes 打算与 Kprobes 进行有效的相互操作。
+例如，检测模块可以同时调用 Kprobes API 和 Uprobes API。
 
-Uprobes is intended to interoperate usefully with Kprobes (see
-Documentation/kprobes.txt).  For example, an instrumentation module
-can make calls to both the Kprobes API and the Uprobes API.
-
-A uprobe or uretprobe handler can register or unregister kprobes,
-jprobes, and kretprobes, as well as uprobes and uretprobes.  On the
-other hand, a kprobe, jprobe, or kretprobe handler must not sleep, and
-therefore cannot register or unregister any of these types of probes.
-(Ideas for removing this restriction are welcome.)
+uprobe 或 uretprobe 回调函数可以注册或注销 kprobes、jprobes、kretprobes，以及 uprobes 和 uretprobes。
+另外，kprobe、jprobe、kretprobe 回调函数一定不能休眠，不然会无法注册或注销这些探针。
 
 注意，`u[ret]probe` 类型的探针性能开支会比 `k[ret]probe` 类型高出好几倍。
 
