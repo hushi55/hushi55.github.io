@@ -195,9 +195,9 @@ TEXT runtime·goexit(SB),NOSPLIT,$0-0
 	CALL	runtime·goexit1(SB)	// does not return
 	// traceback from goexit1 must hit code range of goexit
 	BYTE	$0x90	// NOP
-</pre>
+```
 
-<pre class="nowordwrap">
+```cgo
 // getcallerpc returns the program counter (PC) of its caller's caller.
 // getcallersp returns the stack pointer (SP) of its caller's caller.
 // For both, the argp must be a pointer to the caller's first function argument.
@@ -231,9 +231,9 @@ func getcallerpc(argp unsafe.Pointer) uintptr
 
 //go:noescape
 func getcallersp(argp unsafe.Pointer) uintptr
-</pre>
+```
 
-<pre class="nowordwrap">
+```
 func gogo(buf *gobuf)
 ```
 
