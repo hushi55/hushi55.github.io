@@ -93,7 +93,7 @@ VMs, L4 load-balancers 和 persistent storage (for PersistentVolumes)。
   对于每一个 local Pod，calico 设置 PodIP 对本地路由到 veth 设备上。
   
 ```text
-calico CNI 创建到 veth 设备林外一端是没有 IP 地址的，
+calico CNI 创建到 veth 设备另外一端是没有 IP 地址的，
 为了提供 Pod --> node 方向上的连通性，每一个 veth 对，需要设置 `proxy_arp` 参数，
 这个使得 Pod 请求 root NS 的 ARP 请求都能够响应(假定 node 都有一个默认的路由指向自己)
 ```    
@@ -129,7 +129,7 @@ IP 和 MAC 填充过程如下：
 
 ### cilium
 
-- 连通性：通过创建一个 veth 对，一端连接到 Pod's namespace，一端拦截到 node's root namesapce。
+- 连通性：通过创建一个 veth 对，一端连接到 Pod's namespace，一端链接到 node's root namesapce。
   cilium attaches eBPF 程序在 ingress TC 到勾子出，将来能够处理所有进入 pod 到网络包。
   
 ```text

@@ -67,6 +67,7 @@ func gostartcall(buf *gobuf, fn, ctxt unsafe.Pointer) {
 ### 为什么要有 systemcall，mcall
 从前面的分析知道，`m` 对象上有两个 `g` 对象，其中一个为 `g` 另外一个 `g0`。其中 `g0` 对象的栈作为了 `m` 对象的底层操作系统的线程执行栈
 
+
 ```go
 /usr/local/go/src/runtime/proc.go:1572
 
@@ -76,10 +77,9 @@ newosproc(mp, unsafe.Pointer(mp.g0.stack.hi))
 
 ...
 
-</pre>
+```
 
-<pre class="nowordwrap">
-
+```cgo
 /usr/local/go/src/runtime/os_linux.go:152
 
 ...
