@@ -5,21 +5,22 @@ description: 介绍 kubernetes 网络模型
 category: blog
 tags: [linux, kubernetes, network]
 ---
-之前一直做 kubernetes 网路相关的工作，为了系统的学习 kubernetes 网路相关知识。
+之前一直做 kubernetes 网络相关的工作，为了系统的学习 kubernetes 网络相关知识。
 将之前的工作做一个记录，方便作者自己查找。
 
 ## 定义问题
-网路是 kubernetes 系统中核心的一个子模块，总体上提出下面 4 个核心需要解决的问题。
+网络是 kubernetes 系统中核心的一个子模块，总体上提出下面 4 个核心需要解决的问题。
 
 1. 容器 <--> 容器 之间的通信：这个通过 Pods 的设计和 localhost 来解决，默认解决。
 2. Pod <--> Pod 之间的通信：通过 CNI 插件来解决。
 3. Pod <--> Service 之间的通信：这个通过 services 来解决。
 4. External <--> Service 之间的通信：这个通过 services 来解决。   
 
-其中 `1` 着重解决本地容器通信问题 
-`2` 着重解决东西向流量问题，
-`4` 解决南北向流量问题，
-`3` 解决高可用性问题。
+其中 
+ - `1` 着重解决本地容器通信问题 
+ - `2` 着重解决东西向流量问题，
+ - `4` 解决南北向流量问题，
+ - `3` 解决高可用性问题。
 
 ## 几点要求
 为了解决上述提出的 4 个问题，总体上提出下面三个要求：
@@ -31,12 +32,12 @@ tags: [linux, kubernetes, network]
 ### 目的和动机
 提出上诉 3 个总的要求的动机和目的是什么呢？
 
-- 容器化技术的普及是由 docker 带动的，早前 docker 的网路模型采用了 NAT 的方式来通信。
+- 容器化技术的普及是由 docker 带动的，早前 docker 的网络模型采用了 NAT 的方式来通信。
 - port 形式的 NAT 通信将导致很多问题，
   * port 是紧缺资源容易发生用尽的时候
   * port 分配将导致调度器机器复杂
   * port 通信方式导致之前的微服务注册机制不兼容  
-- 考虑到很多 IaaS 层使用的 VM 管理方式，采用这样的网路模型，能很好的兼容之前的管理方式    
+- 考虑到很多 IaaS 层使用的 VM 管理方式，采用这样的网络模型，能很好的兼容之前的管理方式    
 
 ## CNI 
 
@@ -47,7 +48,7 @@ CNI 插件的目标和有[官方文档](https://kubernetes.io/docs/concepts/clus
 1. 连通性：确保每个 pod 有默认的 eth0 设备，并且 host 上的 root namespace 可以直达到 pod。
 2. 可达性：确保从其他节点可以到达 pod，并且没有 NAT。
 
-`连通性`是比较容易理解的，每一个 pod 必须有一个 NIC 来和外部网路通信。解决的是 Pod 和 host 上的网路问题。
+`连通性`是比较容易理解的，每一个 pod 必须有一个 NIC 来和外部网络通信。解决的是 Pod 和 host 上的网络问题。
 在 Node 上的一些本地进程需要能从 root network namespace 到达 PodIP(如：执行 health 和 readiness 检查)，
 因此需要 root NS 的连通性。
 
@@ -82,7 +83,7 @@ CNI 插件的目标和有[官方文档](https://kubernetes.io/docs/concepts/clus
 ### IaaS
 当前基本是 cloud 的环境，这个是趋势，因为云环境下提供了很多 kubernetes 需要的资源
 VMs, L4 load-balancers 和 persistent storage (for PersistentVolumes)。
-并且在网路这个子模块中，云环境下提供了基于 SDN 的可编程方式。
+并且在网络这个子模块中，云环境下提供了基于 SDN 的可编程方式。
 
 ![](/images/k8s/network/CNI-iaas.png)
 
@@ -129,10 +130,10 @@ IP 和 MAC 填充过程如下：
 ### cilium
 
 - 连通性：通过创建一个 veth 对，一端连接到 Pod's namespace，一端拦截到 node's root namesapce。
-  cilium attaches eBPF 程序在 ingress TC 到勾子出，将来能够处理所有进入 pod 到网路包。
+  cilium attaches eBPF 程序在 ingress TC 到勾子出，将来能够处理所有进入 pod 到网络包。
   
 ```text
-注意在 root namespace 侧的 veth 一端是没有 IP 地址的，网路的连通性是通过 eBPF 转发到这个设备上的。
+注意在 root namespace 侧的 veth 一端是没有 IP 地址的，网络的连通性是通过 eBPF 转发到这个设备上的。
 ```  
 
 - 可达性：这个实现不同于其他，依赖于 cilium 的配置：
@@ -140,7 +141,7 @@ IP 和 MAC 填充过程如下：
     2. 在 native-routing 模式下，cilium 不做任何可达性设置，假定这个被外部设备实现。
        这个通常是在 SDN(如： cloud 环境)或者本地操作系统路由(本地环境)使用静态路由或者 BGP。
 
-如下图所示，我们使用 VXLAN-based 配置，网路拓扑如下：
+如下图所示，我们使用 VXLAN-based 配置，网络拓扑如下：
 
 ![](/images/k8s/network/CNI-cilium.png)
 

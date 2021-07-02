@@ -5,7 +5,7 @@ description: 介绍 kubernetes pod TERM
 category: blog
 tags: [linux, kubernetes, network]
 ---
-之前一直做 kubernetes 网路相关的工作，为了系统的学习 kubernetes 网路相关知识。
+之前一直做 kubernetes 网络相关的工作，为了系统的学习 kubernetes 网络相关知识。
 将之前的工作做一个记录，方便作者自己查找。
 
 ## 问题
