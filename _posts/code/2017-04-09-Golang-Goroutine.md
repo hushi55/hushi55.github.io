@@ -118,7 +118,13 @@ mcall 所用调用的位置如下图：
 
 ![](/images/blog/golang/scheduled/mcall_caller.png)
 
-`recovery`,`gosched_m`,`park_m`,`goexit0`,`exitsyscall0` 这些函数最终都是会调用到 schedule() 函数，表明这些点就是 golang 介入调度的点。
+ - `recovery`
+ - `gosched_m`
+ - `park_m`
+ - `goexit0`
+ - `exitsyscall0` 
+    
+这些函数最终都是会调用到 schedule() 函数，表明这些点就是 golang 介入调度的点。
 
 
 ## Goroutine 调度时机
