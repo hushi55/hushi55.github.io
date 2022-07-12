@@ -21,16 +21,16 @@ tags: [jmeter, test]
 ### 安装
 我们只需要将下载的 plugins 解压到
 
-<pre>apache-jmeter-2.11\lib\ext</pre>
+```apache-jmeter-2.11\lib\ext```
 
 即可。
 
 ## jmeter 测试非 http 协议
 我们有时候测试可能不止是 http 协议或者 http 协议之上(如 OAuth1, OAuth2 等)的软件，如：自定义的协议，像自己设计的 IM 聊天系统，现在非常火的推送系统等。jmeter 也有相关的接口可以完成这种需求。我们可以自己自定义实现测试。首先我们只需要继承
 
-<pre>
+```
 org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient
-</pre>
+```
 
 我们可以看到 AbstractJavaSamplerClient 覆盖下面的这些方法。
 

@@ -51,9 +51,9 @@ public class VisibilityTest extends Thread {
 
 程序比较简单，在主线程中启动一个线程，这个线程不停的对局部变量做自增操作，主线程休眠 1 秒中后改变启动线程的循环控制变量，想让它停止循环。这个程序在 client 模式下是能停止线程做自增操作的，**但是在 server 模式先将是无限循环**。若是改成
 
-<pre>
+```
 private volatile boolean stop;
-</pre>
+```
 
 用 volatile 修饰 stop 变量，将不会出现死循环。我们知道 volatile 在 JVM 内存模型中是保证修饰变量的可见性，这个不是我们今天讨论的重点，我们今天想看看在 volatile 修饰下和不修饰代码编译成的汇编代码的区别，以便我们学习 JVM 的内存模型。
 
